@@ -1,10 +1,10 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import "./App.css";
+
+import Diagramm from "./Components/Diagram/Diagram";
 
 function App() {
-  return (
-    <h1>Test</h1>
-  );
+  return <Diagramm />;
 }
 
 export default App;
