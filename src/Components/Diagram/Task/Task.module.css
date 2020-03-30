@@ -1,0 +1,7 @@
+.task {
+    fill: red;
+}
+
+.taskText {
+    font: italic 1rem sans-serif;
+}
