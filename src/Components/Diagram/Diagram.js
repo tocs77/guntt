@@ -12,12 +12,12 @@ const tasks = [
     task: "Develop SVG"
   },
   {
-    startDate: new Date("March 15, 2020 00:00:00"),
+    startDate: new Date("March 20, 2020 00:00:00"),
     endDate: new Date("April 7, 2020 00:00:00"),
     task: "Buy Milk"
   },
   {
-    startDate: new Date("March 20, 2020 00:00:00"),
+    startDate: new Date("March 15, 2020 00:00:00"),
     endDate: new Date("March 29, 2020 00:00:00"),
     task: "Find key"
   }
@@ -25,9 +25,9 @@ const tasks = [
 
 const millisecondInDay = 1000 * 3600 * 24;
 
-const HEADER_HEIGHT = "15%";
-const BODY_HEIGHT = 85; //! 85% paired constants
-const TASK_WIDTH = 20; // 20% task labels width
+const TASK_LABEL_WIDTH = 20; // 20% task labels width
+const TASK_HEIGHT = 30; //? Task height in pixels  Maybe in procents?
+const HEADER_HEIGHT = TASK_HEIGHT;
 
 const Diagram = props => {
   let firstDate = tasks[0].startDate;
@@ -39,7 +39,7 @@ const Diagram = props => {
 
   let daysAmount = (lastDate - firstDate) / millisecondInDay + 1;
 
-  const xStep = (100 - TASK_WIDTH) / daysAmount;
+  const xStep = (100 - TASK_LABEL_WIDTH) / daysAmount;
 
   const verticalLines = [];
   const dates = [];
@@ -47,8 +47,8 @@ const Diagram = props => {
   let currentDate = new Date(firstDate);
 
   for (let d = 0; d < daysAmount; d++) {
-    let xCoord = (TASK_WIDTH + d * xStep).toString() + "%";
-    let textCoord = (TASK_WIDTH + d * xStep + xStep / 3).toString() + "%";
+    let xCoord = (TASK_LABEL_WIDTH + d * xStep).toString() + "%";
+    let textCoord = (TASK_LABEL_WIDTH + d * xStep + xStep / 3).toString() + "%";
     verticalLines.push(
       <line
         key={d}
@@ -67,10 +67,11 @@ const Diagram = props => {
   }
 
   const tasksSVG = [];
-  let y = 40;
+  let taskHeight = TASK_HEIGHT;
+  let y = HEADER_HEIGHT;
   for (let task of tasks) {
     const taskBegin = (task.startDate - firstDate) / millisecondInDay;
-    const x = (TASK_WIDTH + taskBegin * xStep).toString() + "%";
+    const x = (taskHeight + taskBegin * xStep).toString() + "%";
 
     const width =
       (
@@ -79,12 +80,23 @@ const Diagram = props => {
       ).toString() + "%";
     console.log(task, taskBegin, x, width);
     tasksSVG.push(
-      <Task task={task.task} y={y} x={x} width={width} key={task.task} />
+      <Task
+        task={task.task}
+        y={y}
+        x={x}
+        width={width}
+        key={task.task}
+        height={TASK_HEIGHT}
+      />
     );
-    y += 30;
+    y += TASK_HEIGHT;
   }
   return (
-    <svg id="diagram" className={classes.diagram}>
+    <svg
+      id="diagram"
+      className={classes.diagram}
+      height={TASK_HEIGHT * tasks.length + HEADER_HEIGHT}
+    >
       {verticalLines}
       <line
         x1="0%"

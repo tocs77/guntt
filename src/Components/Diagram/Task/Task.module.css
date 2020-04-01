@@ -5,3 +5,9 @@
 .taskText {
     font: italic 1rem sans-serif;
 }
+
+.bottom_line {
+    stroke: blueviolet;
+    stroke-width: 1px;
+    stroke-dasharray: 4;
+}
