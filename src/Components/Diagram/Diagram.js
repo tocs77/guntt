@@ -20,6 +20,16 @@ const tasks = [
     startDate: new Date("March 15, 2020 00:00:00"),
     endDate: new Date("March 29, 2020 00:00:00"),
     task: "Find key"
+  },
+  {
+    startDate: new Date("March 17, 2020 00:00:00"),
+    endDate: new Date("March 23, 2020 00:00:00"),
+    task: "Clear room"
+  },
+  {
+    startDate: new Date("March 26, 2020 00:00:00"),
+    endDate: new Date("April 8, 2020 00:00:00"),
+    task: "Build rocket"
   }
 ];
 
@@ -67,11 +77,10 @@ const Diagram = props => {
   }
 
   const tasksSVG = [];
-  let taskHeight = TASK_HEIGHT;
   let y = HEADER_HEIGHT;
-  for (let task of tasks) {
+  for (let [index, task] of tasks.entries()) {
     const taskBegin = (task.startDate - firstDate) / millisecondInDay;
-    const x = (taskHeight + taskBegin * xStep).toString() + "%";
+    const x = (TASK_LABEL_WIDTH + taskBegin * xStep).toString() + "%";
 
     const width =
       (
@@ -85,7 +94,8 @@ const Diagram = props => {
         y={y}
         x={x}
         width={width}
-        key={task.task}
+        key={index}
+        index={index}
         height={TASK_HEIGHT}
       />
     );
