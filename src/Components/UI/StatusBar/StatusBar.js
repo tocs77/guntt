@@ -1,11 +1,13 @@
-import React from 'react'
+import React from "react";
 
-import classes from './StatusBar.module.css'
+import classes from "./StatusBar.module.css";
 
 const StatusBar = props => {
-    return (
-        <p className={classes.statusBar}>Status Bar</p>
-    )
-}
+  return (
+    <p className={classes.statusBar} id={props.id}>
+      Status Bar
+    </p>
+  );
+};
 
-export default StatusBar
+export default StatusBar;

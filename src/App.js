@@ -9,10 +9,10 @@ import StatusBar from './Components/UI/StatusBar/StatusBar'
 function App() {
   return (
     <React.Fragment>
-      <Navigation />
+      <Navigation id="navigation"/>
       <SideMenu />
       <Diagramm />
-      <StatusBar />
+      <StatusBar id="statusBar"/>
     </React.Fragment>
   );
 }
