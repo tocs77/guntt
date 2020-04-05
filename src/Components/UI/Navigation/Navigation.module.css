@@ -1,3 +1,4 @@
 .navigation {
-    background-color: orangered;
+    background: linear-gradient(90deg, #6AC9B6, #379683);
+    max-height: 100%;
 }

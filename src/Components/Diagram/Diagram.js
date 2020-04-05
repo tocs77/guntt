@@ -87,7 +87,7 @@ const Diagram = props => {
         ((task.endDate - task.startDate) / millisecondInDay + 1) *
         xStep
       ).toString() + "%";
-    console.log(task, taskBegin, x, width);
+    //console.log(task, taskBegin, x, width);
     tasksSVG.push(
       <Task
         task={task.task}

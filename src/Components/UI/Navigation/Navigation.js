@@ -1,9 +1,15 @@
 import React from "react";
 
 import classes from "./Navigation.module.css";
+import Logo from "../Logo/Logo";
 
 const Navigation = props => {
-  return <div className={classes.navigation} id={props.id}>Navigation</div>;
+  return (
+    <nav className={classes.navigation} id={props.id}>>
+      <Logo />
+      Navigation
+    </nav>
+  );
 };
 
 export default Navigation;
