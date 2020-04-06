@@ -1,5 +1,6 @@
 .navigation {
-    background: linear-gradient(90deg, #6AC9B6, #379683);
+
+    background: linear-gradient(90deg, #7e7e7e, #585858);
     max-height: 100%;
     display: flex;
     justify-content: space-between;
