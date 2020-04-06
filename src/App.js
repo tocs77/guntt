@@ -5,7 +5,7 @@ import Diagramm from "./Components/Diagram/Diagram";
 import Navigation from "./Components/UI/Navigation/Navigation";
 import SideMenu from "./Components/UI/SideMenu/SideMenu";
 import StatusBar from "./Components/UI/StatusBar/StatusBar";
-import AddTaskDialog from "./Components/UI/addTaskDlg/addTaskDlg";
+import AddTaskDialog from "./Components/UI/modalDialog/addTaskDlg/addTaskDlg";
 
 import {
   taskReducer,
