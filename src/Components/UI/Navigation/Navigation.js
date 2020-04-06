@@ -4,20 +4,15 @@ import classes from "./Navigation.module.css";
 import Logo from "../Logo/Logo";
 import Button from "../Button/Button";
 
-import { Context } from "../../../store/reducers";
-import * as actiontypes from "../../../store/actionTypes";
+import { AppContext } from "../../../contexts/appContext";
+import * as actiontypes from "../../../contexts/actionTypes";
 
 const Navigation = props => {
-  const { dispatch } = useContext(Context);
+  const { appDispatch } = useContext(AppContext);
 
   const addTaskHandler = () => {
-    dispatch({
-      type: actiontypes.ADD_TASK,
-      task: {
-        startDate: new Date("March 17, 2020 00:00:00"),
-        endDate: new Date("April 1, 2020 00:00:00"),
-        task: "Super new task"
-      }
+    appDispatch({
+      type: actiontypes.SHOW_ADD_TASK_DIALOG
     });
   };
   return (

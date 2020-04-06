@@ -29,20 +29,17 @@ export const initialTasks = [
   }
 ];
 
-export const reducer = (tasks = initialTasks, action) => {
+export const taskReducer = (tasks = initialTasks, action) => {
   switch (action.type) {
     case actionTypes.ADD_TASK:
       tasks = [...tasks];
       tasks.push(action.task);
-      console.log("Adding in reducer");
-      console.log(tasks);
       return tasks;
     case actionTypes.GET_ALL_TASKS:
-      console.log("Get tasks reducer");
       return tasks;
     default:
       return tasks;
   }
 };
 
-export const Context = React.createContext();
+export const TasksContext = React.createContext();

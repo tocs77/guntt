@@ -5,18 +5,29 @@ import Diagramm from "./Components/Diagram/Diagram";
 import Navigation from "./Components/UI/Navigation/Navigation";
 import SideMenu from "./Components/UI/SideMenu/SideMenu";
 import StatusBar from "./Components/UI/StatusBar/StatusBar";
+import AddTaskDialog from "./Components/UI/addTaskDlg/addTaskDlg";
 
-import { reducer, initialTasks, Context } from "./store/reducers";
+import {
+  taskReducer,
+  initialTasks,
+  TasksContext
+} from "./contexts/taskContext";
+
+import { appReducer, initialState, AppContext } from "./contexts/appContext";
 
 function App() {
-  const [tasks, dispatch] = useReducer(reducer, initialTasks);
+  const [tasks, tasksDispatch] = useReducer(taskReducer, initialTasks);
+  const [appState, appDispatch] = useReducer(appReducer, initialState);
   return (
-    <Context.Provider value={{ tasks, dispatch }}>
+    <AppContext.Provider value={{ appState, appDispatch }}>
       <Navigation id='navigation' />
       <SideMenu />
-      <Diagramm />
+      <TasksContext.Provider value={{ tasks, tasksDispatch }}>
+        <Diagramm />
+      </TasksContext.Provider>
       <StatusBar id='statusBar' />
-    </Context.Provider>
+      {appState.showAddModal ? <AddTaskDialog /> : null}
+    </AppContext.Provider>
   );
 }
 

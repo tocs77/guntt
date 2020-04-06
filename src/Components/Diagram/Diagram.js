@@ -1,12 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 
 import Text from "./Text/Text";
 import Task from "./Task/Task";
 
 import classes from "./Diagram.module.css";
 
-import { Context } from "../../store/reducers";
-import * as actionTypes from "../../store/actionTypes";
+import { TasksContext } from "../../contexts/taskContext";
 
 const millisecondInDay = 1000 * 3600 * 24;
 
@@ -15,11 +14,7 @@ const TASK_HEIGHT = 30; //? Task height in pixels  Maybe in procents?
 const HEADER_HEIGHT = TASK_HEIGHT;
 
 const Diagram = () => {
-  const { tasks, dispatch } = useContext(Context);
-
-  useEffect(() => {
-    dispatch({ type: actionTypes.GET_ALL_TASKS });
-  });
+  const { tasks } = useContext(TasksContext);
 
   let firstDate = tasks[0].startDate;
   let lastDate = tasks[0].endDate;
