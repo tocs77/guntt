@@ -7,11 +7,14 @@ import ModalDialog from "../modalDialog";
 import Input from "../../Input/Input";
 
 import { AppContext } from "../../../../contexts/appContext";
+import { TasksContext } from "../../../../contexts/taskContext";
 import * as actiontypes from "../../../../contexts/actionTypes";
 import { checkValidity, updateObject } from "../../../../shared/utility";
 
 const AddTaskDialog = () => {
   const { appDispatch } = useContext(AppContext);
+  const { tasksDispatch } = useContext(TasksContext);
+
   const [addForm, setAddForm] = useState({
     task: {
       elementType: "input",
@@ -27,7 +30,7 @@ const AddTaskDialog = () => {
       valid: false,
       touched: false
     },
-    StartDate: {
+    startDate: {
       elementType: "input",
       elementConfig: {
         type: "text",
@@ -57,6 +60,8 @@ const AddTaskDialog = () => {
     }
   });
 
+  const [formIsValid, setFormIsValid] = useState(false);
+
   const closeDialogHandler = () => {
     appDispatch({
       type: actiontypes.HIDE_ADD_TASK_DIALOG
@@ -81,7 +86,24 @@ const AddTaskDialog = () => {
       formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
     }
     setAddForm(updatedOrderForm);
-    //setFormIsValid(formIsValid);
+    setFormIsValid(formIsValid);
+  };
+
+  const addTaskHandler = () => {
+    if (formIsValid) {
+      tasksDispatch({
+        type: actiontypes.ADD_TASK,
+        task: {
+          task: addForm.task.value,
+          startDate: Date.parse(addForm.startDate.value),
+          endDate: Date.parse(addForm.endDate.value)
+        }
+      });
+
+      appDispatch({
+        type: actiontypes.HIDE_ADD_TASK_DIALOG
+      });
+    }
   };
 
   const formElementsArray = [];
@@ -110,7 +132,7 @@ const AddTaskDialog = () => {
       <div className={classes.textInputs}>{formElements}</div>
       <div className={classes.buttonArea}>
         <Button clickHandler={closeDialogHandler}>Cancel</Button>
-        <Button>Add task</Button>
+        <Button clickHandler={addTaskHandler}>Add task</Button>
       </div>
     </ModalDialog>
   );

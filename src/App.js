@@ -24,9 +24,9 @@ function App() {
       <SideMenu />
       <TasksContext.Provider value={{ tasks, tasksDispatch }}>
         <Diagramm />
+        {appState.showAddModal ? <AddTaskDialog /> : null}
       </TasksContext.Provider>
       <StatusBar id='statusBar' />
-      {appState.showAddModal ? <AddTaskDialog /> : null}
     </AppContext.Provider>
   );
 }
