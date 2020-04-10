@@ -20,13 +20,13 @@ function App() {
   const [appState, appDispatch] = useReducer(appReducer, initialState);
   return (
     <AppContext.Provider value={{ appState, appDispatch }}>
-      <Navigation id='navigation' />
-      <SideMenu />
       <TasksContext.Provider value={{ tasks, tasksDispatch }}>
+        <Navigation id='navigation' />
+        <SideMenu />
         <Diagramm />
         {appState.showAddModal ? <AddTaskDialog /> : null}
+        <StatusBar id='statusBar' />
       </TasksContext.Provider>
-      <StatusBar id='statusBar' />
     </AppContext.Provider>
   );
 }

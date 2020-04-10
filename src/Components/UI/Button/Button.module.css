@@ -16,6 +16,7 @@
 
 }
 
+
 .button:hover {
     transform: translateY(5px);
     transform: scale(1.05);
@@ -27,4 +28,14 @@
     font-size: 1.5rem;
     text-align: center;
     font-weight: 600;
+}
+
+.button_small {
+    min-width: fit-content;
+
+}
+
+.button_text_small {
+    font-size: .7rem;
+    letter-spacing: 0.1rem;
 }
