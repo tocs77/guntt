@@ -22,15 +22,18 @@ const Task = props => {
   if (!taskClass) {
     taskClass = classes.color_default;
   }
-  taskClasses.push("color_" + toString(props.index));
+
+  if (props.task.highlight) {
+    taskClass = classes.color_highlighted;
+  }
+  // taskClasses.push("color_" + toString(props.index));
   return (
     <React.Fragment>
       <text
-        x="2%"
+        x='2%'
         y={props.y + props.height / 2 + props.height / 6}
-        className={classes.taskText}
-      >
-        {props.task}
+        className={classes.taskText}>
+        {props.task.task}
       </text>
       <rect
         x={props.x}
@@ -38,13 +41,13 @@ const Task = props => {
         className={taskClass}
         width={props.width}
         height={props.height / 3}
-        ry="5%"
+        ry='5%'
         onMouseOver={mouseEnterHandler}
       />
       <line
-        x1="0%"
+        x1='0%'
         y1={props.y + props.height}
-        x2="100%"
+        x2='100%'
         y2={props.y + props.height}
         className={classes.bottom_line}
       />

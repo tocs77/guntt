@@ -66,7 +66,7 @@ const Diagram = () => {
     //console.log(task, taskBegin, x, width);
     tasksSVG.push(
       <Task
-        task={task.task}
+        task={task}
         y={y}
         x={x}
         width={width}

@@ -6,8 +6,11 @@ import classes from "./TaskPanel.module.css";
 
 const taskPanel = props => {
   return (
-    <div className={classes.taskPanel}>
-      <div className={classes.label}>{props.Task.task}</div>
+    <div
+      onMouseEnter={props.mouseEnter}
+      onMouseLeave={props.mouseLeave}
+      className={classes.taskPanel}>
+      <div className={classes.label}>{props.task.task}</div>
 
       <Button clickHandler={null} size='small'>
         Done

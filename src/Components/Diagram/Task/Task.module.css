@@ -44,3 +44,7 @@
 .color_default {
     fill: rgba(128, 128, 128, 0.7);
 }
+
+.color_highlighted {
+    fill: yellow;
+}
