@@ -7,34 +7,49 @@ import TaskPanel from "./TaskPanel/TaskPanel";
 import { TasksContext } from "../../../contexts/taskContext";
 import * as actionTypes from "../../../contexts/actionTypes";
 
-const SideMenu = props => {
+const SideMenu = (props) => {
   const { tasks, tasksDispatch } = useContext(TasksContext);
 
-  const mouseEnterPanelHandler = (e, id) => {
-    console.log("Enter on ", id);
+  const mouseEnterPanelHandler = (id) => {
     tasksDispatch({
       type: actionTypes.HIGHLIGHT_TASK,
       id: id,
-      value: true
+      value: true,
     });
   };
 
-  const mouseLeavePanelHandler = (e, id) => {
-    console.log("Leave ", id);
+  const mouseLeavePanelHandler = (id) => {
     tasksDispatch({
       type: actionTypes.HIGHLIGHT_TASK,
       id: id,
-      value: false
+      value: false,
     });
   };
 
-  const tasksElements = tasks.map(task => {
+  const deleteTaskHandler = (id) => {
+    tasksDispatch({
+      type: actionTypes.DELETE_TASK,
+      id: id,
+    });
+  };
+
+  const doneTaskHandler = (id) => {
+    tasksDispatch({
+      type: actionTypes.DONE_TASK,
+      id: id,
+      value: true,
+    });
+  };
+
+  const tasksElements = tasks.map((task) => {
     return (
       <TaskPanel
         task={task}
         key={task.id}
-        mouseEnter={e => mouseEnterPanelHandler(e, task.id)}
-        mouseLeave={e => mouseLeavePanelHandler(e, task.id)}></TaskPanel>
+        mouseEnter={() => mouseEnterPanelHandler(task.id)}
+        mouseLeave={() => mouseLeavePanelHandler(task.id)}
+        deleteTask={() => deleteTaskHandler(task.id)}
+        doneTask={() => doneTaskHandler(task.id)}></TaskPanel>
     );
   });
 

@@ -16,6 +16,10 @@ const HEADER_HEIGHT = TASK_HEIGHT;
 const Diagram = () => {
   const { tasks } = useContext(TasksContext);
 
+  if (tasks.length === 0) {
+    return <div className={classes.message}>No tasks yet</div>;
+  }
+
   let firstDate = tasks[0].startDate;
   let lastDate = tasks[0].endDate;
   for (let task of tasks) {

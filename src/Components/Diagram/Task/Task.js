@@ -1,8 +1,10 @@
 import React from "react";
 
+import cx from "classnames";
+
 import classes from "./Task.module.css";
 
-const Task = props => {
+const Task = (props) => {
   const taskClasses = [
     classes.color_1,
     classes.color_2,
@@ -11,7 +13,7 @@ const Task = props => {
     classes.color_5,
     classes.color_6,
     classes.color_7,
-    classes.color_8
+    classes.color_8,
   ];
 
   const mouseEnterHandler = () => {
@@ -26,13 +28,20 @@ const Task = props => {
   if (props.task.highlight) {
     taskClass = classes.color_highlighted;
   }
+
+  const taskTextClasses = [classes.taskText];
+
+  if (props.task.done) {
+    taskClass = classes.color_done;
+    taskTextClasses.push(classes.textDone);
+  }
   // taskClasses.push("color_" + toString(props.index));
   return (
     <React.Fragment>
       <text
         x='2%'
         y={props.y + props.height / 2 + props.height / 6}
-        className={classes.taskText}>
+        className={cx(taskTextClasses)}>
         {props.task.task}
       </text>
       <rect

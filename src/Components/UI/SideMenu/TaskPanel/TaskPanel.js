@@ -4,7 +4,7 @@ import Button from "../../Button/Button";
 
 import classes from "./TaskPanel.module.css";
 
-const taskPanel = props => {
+const taskPanel = (props) => {
   return (
     <div
       onMouseEnter={props.mouseEnter}
@@ -12,10 +12,10 @@ const taskPanel = props => {
       className={classes.taskPanel}>
       <div className={classes.label}>{props.task.task}</div>
 
-      <Button clickHandler={null} size='small'>
+      <Button clickHandler={props.doneTask} size='small'>
         Done
       </Button>
-      <Button clickHandler={null} size='small'>
+      <Button clickHandler={props.deleteTask} size='small'>
         Delete
       </Button>
     </div>

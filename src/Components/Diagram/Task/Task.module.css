@@ -1,6 +1,11 @@
 .taskText {
     font: italic 1.2rem sans-serif;
     font-weight: 600;
+
+}
+
+.textDone {
+    text-decoration: line-through;
 }
 
 .bottom_line {
@@ -8,6 +13,7 @@
     stroke-width: 1px;
     stroke-dasharray: 4;
 }
+
 
 .color_1 {
     fill: rgba(255, 111, 97, .7)
@@ -46,5 +52,9 @@
 }
 
 .color_highlighted {
-    fill: yellow;
+    fill: rgba(255, 242, 0, 0.5)
+}
+
+.color_done {
+    fill: rgba(131, 149, 167, 0.3)
 }

@@ -15,3 +15,7 @@
     stroke: orangered;
     stroke-width: 3px;
 }
+
+.message {
+    font-size: 2rem;
+}
