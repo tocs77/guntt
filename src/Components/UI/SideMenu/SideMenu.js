@@ -9,7 +9,7 @@ import TaskPanel from './TaskPanel/TaskPanel';
 import { TasksContext } from '../../../contexts/taskContext';
 import * as actionTypes from '../../../contexts/actionTypes';
 
-const SideMenu = (props) => {
+const SideMenu = () => {
   const { tasks, tasksDispatch } = useContext(TasksContext);
 
   const { t } = useTranslation();

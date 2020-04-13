@@ -1,27 +1,42 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 
-import classes from "./Navigation.module.css";
-import Logo from "../Logo/Logo";
-import Button from "../Button/Button";
+import { useTranslation } from 'react-i18next';
 
-import { AppContext } from "../../../contexts/appContext";
-import * as actiontypes from "../../../contexts/actionTypes";
+import classes from './Navigation.module.css';
+import Logo from '../Logo/Logo';
+import Button from '../Button/Button';
 
-const Navigation = props => {
+import { AppContext } from '../../../contexts/appContext';
+import * as actiontypes from '../../../contexts/actionTypes';
+
+const Navigation = (props) => {
   const { appDispatch } = useContext(AppContext);
+
+  const {t, i18n } = useTranslation();
+  const changeLanguage = (code) => {
+    i18n.changeLanguage(code);
+  };
 
   const addTaskHandler = () => {
     appDispatch({
-      type: actiontypes.SHOW_ADD_TASK_DIALOG
+      type: actiontypes.SHOW_ADD_TASK_DIALOG,
     });
   };
   return (
     <nav className={classes.navigation} id={props.id}>
       <Logo />
+      <div className={classes.language_button_block}>
+        <Button size='small' clickHandler={() => changeLanguage('en-Us')}>
+          En
+        </Button>
+        <Button size='small' clickHandler={() => changeLanguage('ru')}>
+          Ru
+        </Button>
+      </div>
       <div className={classes.button_block}>
-        <Button>Use filter</Button>
-        <Button clickHandler={addTaskHandler}>Add Task</Button>
-        <Button>Login</Button>
+        <Button>{t("UseFilter")}</Button>
+  <Button clickHandler={addTaskHandler}>{t("AddTask")}</Button>
+        <Button>{t("Login")}</Button>
       </div>
     </nav>
   );

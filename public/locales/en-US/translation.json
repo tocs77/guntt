@@ -1,3 +1,11 @@
 {
-    "Task": "Task"
+  "Task": "Task",
+  "UseFilter": "Use Filter",
+  "AddTask": "Add Task",
+  "Login": "Login",
+  "StartDate": "Start Date",
+  "EndDate": "End Date",
+  "Cancel": "Cancel",
+  "Done": "Done",
+  "Delete": "Delete"
 }

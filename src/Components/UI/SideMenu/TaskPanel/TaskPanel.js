@@ -1,25 +1,28 @@
-import React from "react";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import Button from "../../Button/Button";
+import Button from '../../Button/Button';
 
-import classes from "./TaskPanel.module.css";
+import classes from './TaskPanel.module.css';
 
-const taskPanel = (props) => {
+const TaskPanel = (props) => {
+  const { t } = useTranslation();
   return (
     <div
       onMouseEnter={props.mouseEnter}
       onMouseLeave={props.mouseLeave}
-      className={classes.taskPanel}>
+      className={classes.taskPanel}
+    >
       <div className={classes.label}>{props.task.task}</div>
 
       <Button clickHandler={props.doneTask} size='small'>
-        Done
+        {t('Done')}
       </Button>
       <Button clickHandler={props.deleteTask} size='small'>
-        Delete
+        {t('Delete')}
       </Button>
     </div>
   );
 };
 
-export default taskPanel;
+export default TaskPanel;
