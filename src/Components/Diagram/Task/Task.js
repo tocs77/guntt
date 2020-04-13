@@ -20,7 +20,7 @@ const Task = (props) => {
     console.log("Mouse over!");
   };
   let taskClass = taskClasses[props.index];
-  console.log(taskClass, props.index);
+  //console.log(taskClass, props.index);
   if (!taskClass) {
     taskClass = classes.color_default;
   }

@@ -7,10 +7,6 @@
     
 }
 
-.vline {
-    stroke: black;
-}
-
 .hline {
     stroke: orangered;
     stroke-width: 3px;
