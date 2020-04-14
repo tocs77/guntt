@@ -32,6 +32,7 @@
 
 .button_small {
     min-width: fit-content;
+    margin: 0.1rem;
 
 }
 
@@ -39,3 +40,12 @@
     font-size: .7rem;
     letter-spacing: 0.1rem;
 }
+
+@media only screen and (max-width: 900px) {
+    .button_text {
+        font-size: 1rem;
+    }
+    .button_text_small {
+        font-size: .4rem;
+    }
+  }

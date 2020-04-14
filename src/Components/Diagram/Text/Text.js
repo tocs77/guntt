@@ -1,10 +1,15 @@
-import React from "react";
+import React from 'react';
 
-import classes from "./Text.module.css";
+import classes from './Text.module.css';
 
-const Text = props => {
+const Text = (props) => {
+  let textClass = classes.small;
+
+  if (props.size === 'medium') {
+    textClass = classes.medium;
+  }
   return (
-    <text className={classes.small} x={props.x} y={props.y}>
+    <text className={textClass} x={props.x} y={props.y}>
       {props.text}
     </text>
   );

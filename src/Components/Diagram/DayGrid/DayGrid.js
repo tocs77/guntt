@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Text from '../Text/Text';
 
@@ -6,6 +7,9 @@ import { makePercentString } from '../../../shared/utility';
 import classes from './DayGrid.module.css';
 
 const DayGrid = (props) => {
+  console.log(props.xStep)
+  const { t } = useTranslation();
+
   const verticalLines = [];
   const dates = [];
   const months = [];
@@ -51,17 +55,18 @@ const DayGrid = (props) => {
     const month = currentDate.toLocaleString('en', { month: 'long' });
     if (month !== currentMonth || d === props.daysAmount - 1) {
       const xMonthCoord = (currentMonthBegin + xCoord) / 2;
-      console.log(currentMonth, xMonthCoord);
       months.push(
         <Text
           key={currentMonth}
           x={makePercentString(xMonthCoord)}
           y={props.headerHeight / 2 - props.headerHeight / 5}
-          text={currentMonth}
+          size='medium'
+          text={t(currentMonth)}
         />
       );
       monthsLines.push(
         <line
+          key={currentMonthBegin}
           x1={makePercentString(currentMonthBegin)}
           y1='0'
           x2={makePercentString(currentMonthBegin)}

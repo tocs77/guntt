@@ -21,3 +21,9 @@
 #statusBar {
   grid-column: 1/3;
 }
+
+@media only screen and (max-width: 900px) {
+  #root {
+    grid-template-rows: 4% 1fr 2%;
+  }
+}

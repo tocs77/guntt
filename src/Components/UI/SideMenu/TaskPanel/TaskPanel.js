@@ -14,13 +14,14 @@ const TaskPanel = (props) => {
       className={classes.taskPanel}
     >
       <div className={classes.label}>{props.task.task}</div>
-
-      <Button clickHandler={props.doneTask} size='small'>
-        {t('Done')}
-      </Button>
-      <Button clickHandler={props.deleteTask} size='small'>
-        {t('Delete')}
-      </Button>
+      <div className={classes.buttonContainer}>
+        <Button clickHandler={props.doneTask} size='small'>
+          {t('Done')}
+        </Button>
+        <Button clickHandler={props.deleteTask} size='small'>
+          {t('Delete')}
+        </Button>
+      </div>
     </div>
   );
 };

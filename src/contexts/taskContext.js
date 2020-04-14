@@ -42,6 +42,7 @@ export const initialTasks = [
     done: false,
     highlight: false,
   },
+
 ];
 
 export const taskReducer = (tasks = initialTasks, action) => {
