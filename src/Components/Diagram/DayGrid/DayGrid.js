@@ -7,7 +7,6 @@ import { makePercentString } from '../../../shared/utility';
 import classes from './DayGrid.module.css';
 
 const DayGrid = (props) => {
-  console.log(props.xStep)
   const { t } = useTranslation();
 
   const verticalLines = [];
@@ -51,9 +50,9 @@ const DayGrid = (props) => {
       />
     );
 
-    currentDate.setDate(currentDate.getDate() + 1);
     const month = currentDate.toLocaleString('en', { month: 'long' });
     if (month !== currentMonth || d === props.daysAmount - 1) {
+      console.log(currentMonth, d);
       const xMonthCoord = (currentMonthBegin + xCoord) / 2;
       months.push(
         <Text
@@ -77,6 +76,7 @@ const DayGrid = (props) => {
       currentMonthBegin = xCoord;
       currentMonth = month;
     }
+    currentDate.setDate(currentDate.getDate() + 1);
   }
 
   return (

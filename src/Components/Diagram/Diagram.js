@@ -30,7 +30,7 @@ const Diagram = () => {
     lastDate = task.endDate > lastDate ? task.endDate : lastDate;
   }
 
-  let daysAmount = (lastDate - firstDate) / millisecondInDay + 1;
+  let daysAmount = Math.floor((lastDate - firstDate) / millisecondInDay + 1);
 
   const xStep = (100 - TASK_LABEL_WIDTH) / daysAmount;
 

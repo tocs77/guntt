@@ -42,6 +42,14 @@ export const initialTasks = [
     done: false,
     highlight: false,
   },
+  // {
+  //   startDate: new Date("April 17, 2020 00:00:00"),
+  //   endDate: new Date("May 8, 2020 00:00:00"),
+  //   task: "Fix SVG problems",
+  //   id: 6,
+  //   done: false,
+  //   highlight: false,
+  // },
 
 ];
 
