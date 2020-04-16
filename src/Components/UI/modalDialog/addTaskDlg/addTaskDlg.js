@@ -35,7 +35,7 @@ const AddTaskDialog = () => {
     startDate: {
       elementType: 'input',
       elementConfig: {
-        type: 'text',
+        type: 'date',
         placeholder: t('StartDate'),
       },
       label: t('StartDate'),
@@ -49,7 +49,7 @@ const AddTaskDialog = () => {
     endDate: {
       elementType: 'input',
       elementConfig: {
-        type: 'text',
+        type: 'date',
         placeholder: t('EndDate'),
       },
       label: t('EndDate'),

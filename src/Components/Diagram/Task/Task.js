@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import cx from "classnames";
+import cx from 'classnames';
 
-import classes from "./Task.module.css";
+import classes from './Task.module.css';
 
 const Task = (props) => {
   const taskClasses = [
@@ -16,8 +16,8 @@ const Task = (props) => {
     classes.color_8,
   ];
 
-  const mouseEnterHandler = () => {
-    console.log("Mouse over!");
+  const mouseClickHandler = (task) => {
+    console.log('Clicked task ', task);
   };
   let taskClass = taskClasses[props.index];
   //console.log(taskClass, props.index);
@@ -41,7 +41,8 @@ const Task = (props) => {
       <text
         x='2%'
         y={props.y + props.height / 2 + props.height / 6}
-        className={cx(taskTextClasses)}>
+        className={cx(taskTextClasses)}
+      >
         {props.task.task}
       </text>
       <rect
@@ -51,7 +52,7 @@ const Task = (props) => {
         width={props.width}
         height={props.height / 3}
         ry='5%'
-        onMouseOver={mouseEnterHandler}
+        onMouseUp={() => mouseClickHandler(props.task.task)}
       />
       <line
         x1='0%'

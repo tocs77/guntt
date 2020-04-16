@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import classes from "./Input.module.css";
+import classes from './Input.module.css';
 
-const input = props => {
+const input = (props) => {
   let inputElement = null;
   const inputClasses = [classes.InputElement];
 
@@ -10,20 +10,30 @@ const input = props => {
     inputClasses.push(classes.Invalid);
   }
   switch (props.elementType) {
-    case "input":
+    case 'input':
       inputElement = (
         <input
-          className={inputClasses.join(" ")}
+          className={inputClasses.join(' ')}
           {...props.elementConfig}
           value={props.value}
           onChange={props.changed}
         />
       );
       break;
-    case "textarea":
+    case 'date':
+      inputElement = (
+        <input
+          className={inputClasses.join(' ')}
+          {...props.elementConfig}
+          value={props.value}
+          onChange={props.changed}
+        />
+      );
+      break;
+    case 'textarea':
       inputElement = (
         <textarea
-          className={inputClasses.join(" ")}
+          className={inputClasses.join(' ')}
           {...props.elementConfig}
           value={props.value}
           onChange={props.changed}
@@ -31,22 +41,24 @@ const input = props => {
       );
       break;
 
-    case "select":
+    case 'select':
       let options = [];
       for (let ind in props.elementConfig.options) {
         options.push(
           <option
             key={props.elementConfig.options[ind].value}
-            value={props.elementConfig.options[ind].value}>
+            value={props.elementConfig.options[ind].value}
+          >
             {props.elementConfig.options[ind].displayValue}
           </option>
         );
       }
       inputElement = (
         <select
-          className={inputClasses.join(" ")}
+          className={inputClasses.join(' ')}
           value={props.value}
-          onChange={props.changed}>
+          onChange={props.changed}
+        >
           {options}
         </select>
       );
@@ -54,7 +66,7 @@ const input = props => {
     default:
       inputElement = (
         <input
-          className={inputClasses.join(" ")}
+          className={inputClasses.join(' ')}
           {...props.elementConfig}
           value={props.value}
           onChange={props.changed}
