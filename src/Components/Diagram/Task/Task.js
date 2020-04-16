@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import cx from 'classnames';
 
 import classes from './Task.module.css';
+import { AppContext } from '../../../contexts/appContext';
+import * as actiontypes from '../../../contexts/actionTypes';
 
 const Task = (props) => {
+  const { appDispatch } = useContext(AppContext);
+
   const taskClasses = [
     classes.color_1,
     classes.color_2,
@@ -16,9 +20,30 @@ const Task = (props) => {
     classes.color_8,
   ];
 
-  const mouseClickHandler = (task) => {
-    console.log('Clicked task ', task);
+  const mouseEnterHandler = (event, id) => {
+    const x = event.clientX;
+    const y = event.clientY;
+
+    appDispatch({
+      type: actiontypes.SHOW_TASK_POPUP_MENU,
+      x: x,
+      y: y,
+      taskID: id,
+      locked: false,
+    });
   };
+
+  const mouseLeaveHandler = () => {
+    setTimeout(
+      () =>
+        appDispatch({
+          type: actiontypes.HIDE_TASK_POPUP_MENU,
+          forced: false,
+        }),
+      500
+    );
+  };
+
   let taskClass = taskClasses[props.index];
   //console.log(taskClass, props.index);
   if (!taskClass) {
@@ -48,11 +73,12 @@ const Task = (props) => {
       <rect
         x={props.x}
         y={props.y + props.height / 2 - props.height / 6}
-        className={taskClass}
+        className={cx(classes.taskRect, taskClass)}
         width={props.width}
         height={props.height / 3}
         ry='5%'
-        onMouseUp={() => mouseClickHandler(props.task.task)}
+        onMouseEnter={(e) => mouseEnterHandler(e, props.task.id)}
+        onMouseLeave={() => mouseLeaveHandler()}
       />
       <line
         x1='0%'

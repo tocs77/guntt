@@ -6,6 +6,7 @@ import Navigation from './Components/UI/Navigation/Navigation';
 import SideMenu from './Components/UI/SideMenu/SideMenu';
 import StatusBar from './Components/UI/StatusBar/StatusBar';
 import AddTaskDialog from './Components/UI/modalDialog/addTaskDlg/addTaskDlg';
+import TaskPopupMenu from './Components/UI/TaskPopupMenu/TaskPopupMenu';
 
 import { taskReducer, initialTasks, TasksContext } from './contexts/taskContext';
 
@@ -21,6 +22,13 @@ function App() {
         <SideMenu />
         <Diagramm />
         {appState.showAddModal ? <AddTaskDialog /> : null}
+        {appState.TaskPopupMenu.show ? (
+          <TaskPopupMenu
+            x={appState.TaskPopupMenu.x}
+            y={appState.TaskPopupMenu.y}
+            id={appState.TaskPopupMenu.taskID}
+          />
+        ) : null}
         <StatusBar id='statusBar' />
       </TasksContext.Provider>
     </AppContext.Provider>

@@ -57,7 +57,7 @@ const Diagram = () => {
     );
     y += TASK_HEIGHT;
   }
-  console.log('Render diagram');
+  //console.log('Render diagram');
   return (
     <svg
       id='diagram'
@@ -74,7 +74,7 @@ const Diagram = () => {
       <DayGrid
         firstDate={firstDate}
         headerHeight={HEADER_HEIGHT}
-        headerBeginValue = {TASK_LABEL_WIDTH}
+        headerBeginValue={TASK_LABEL_WIDTH}
         xStep={xStep}
         daysAmount={daysAmount}
       />

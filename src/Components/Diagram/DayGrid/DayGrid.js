@@ -52,7 +52,7 @@ const DayGrid = (props) => {
 
     const month = currentDate.toLocaleString('en', { month: 'long' });
     if (month !== currentMonth || d === props.daysAmount - 1) {
-      console.log(currentMonth, d);
+      //console.log(currentMonth, d);
       const xMonthCoord = (currentMonthBegin + xCoord) / 2;
       months.push(
         <Text
