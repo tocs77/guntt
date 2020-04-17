@@ -1,6 +1,27 @@
 .popupMenu {
-  width: 5rem;
-  height: 6rem;
-  background-color: orangered;
+  width: 16rem;
+  height: 12rem;
   position: absolute;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(90deg, rgba(87, 179, 138, 1), rgba(61, 153, 112, 1));
+  border-bottom: 1px solid black;
+}
+.submenu {
+  font-weight: 600;
+  font-size: 1.5rem;
+  background: linear-gradient(90deg, rgba(87, 179, 138, 0.8), rgba(61, 153, 112, 0.8));
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submenu:hover {
+  background: linear-gradient(90deg, rgba(66, 133, 118, 0.8), rgba(44, 109, 80, 0.8));
+  font-size: 1.6;
+  color: beige;
 }
