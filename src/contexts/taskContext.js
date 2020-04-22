@@ -1,43 +1,43 @@
-import React from "react";
-import * as actionTypes from "./actionTypes";
+import React from 'react';
+import * as actionTypes from './actionTypes';
 
 export const initialTasks = [
   {
-    startDate: new Date("March 27, 2020 00:00:00"),
-    endDate: new Date("March 30, 2020 00:00:00"),
-    task: "Develop SVG",
+    startDate: new Date('2020-03-27T00:00:00Z'),
+    endDate: new Date('2020-03-30T00:00:00Z'),
+    task: 'Develop SVG',
     id: 1,
     done: false,
     highlight: false,
   },
   {
-    startDate: new Date("March 20, 2020 00:00:00"),
-    endDate: new Date("April 7, 2020 00:00:00"),
-    task: "Buy Milk",
+    startDate: new Date('2020-03-20T00:00:00Z'),
+    endDate: new Date('2020-04-07T00:00:00Z'),
+    task: 'Buy Milk',
     id: 2,
     done: false,
     highlight: false,
   },
   {
-    startDate: new Date("March 15, 2020 00:00:00"),
-    endDate: new Date("March 29, 2020 00:00:00"),
-    task: "Find key",
+    startDate: new Date('2020-03-15T00:00:00Z'),
+    endDate: new Date('2020-03-29T00:00:00Z'),
+    task: 'Find key',
     id: 3,
     done: false,
     highlight: false,
   },
   {
-    startDate: new Date("March 17, 2020 00:00:00"),
-    endDate: new Date("March 23, 2020 00:00:00"),
-    task: "Clear room",
+    startDate: new Date('2020-03-17T00:00:00Z'),
+    endDate: new Date('2020-03-23T00:00:00Z'),
+    task: 'Clear room',
     id: 4,
     done: false,
     highlight: false,
   },
   {
-    startDate: new Date("March 26, 2020 00:00:00"),
-    endDate: new Date("April 8, 2020 00:00:00"),
-    task: "Build rocket",
+    startDate: new Date('2020-03-26T00:00:00Z'),
+    endDate: new Date('2020-04-08T00:00:00Z'),
+    task: 'Build rocket',
     id: 5,
     done: false,
     highlight: false,
@@ -50,7 +50,6 @@ export const initialTasks = [
   //   done: false,
   //   highlight: false,
   // },
-
 ];
 
 export const taskReducer = (tasks = initialTasks, action) => {
@@ -78,14 +77,26 @@ export const taskReducer = (tasks = initialTasks, action) => {
       tasks = [...tasks];
       for (let task of tasks) {
         if (task.id === action.id) {
-          task.done = action.value;
+          task.done = action.value; //? Need value to set done true/false
         }
       }
       return tasks;
-      
+
     case actionTypes.DELETE_TASK:
       tasks = tasks.filter((task) => task.id !== action.id);
       return tasks;
+
+    case actionTypes.EDIT_TASK:
+      tasks = [...tasks];
+      for (let task of tasks) {
+        if (task.id === action.id) {
+          task.task = action.task;
+          task.startDate = action.startDate;
+          task.endDate = action.endDate;
+        }
+      }
+      return tasks;
+
     default:
       return tasks;
   }

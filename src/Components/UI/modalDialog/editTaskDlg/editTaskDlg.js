@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '../../Button/Button';
-import classes from './addTaskDlg.module.css';
+import classes from './editTaskDlg.module.css';
 import ModalDialog from '../modalDialog';
 
 import Input from '../../Input/Input';
@@ -10,14 +10,22 @@ import Input from '../../Input/Input';
 import { AppContext } from '../../../../contexts/appContext';
 import { TasksContext } from '../../../../contexts/taskContext';
 import * as actiontypes from '../../../../contexts/actionTypes';
-import { checkValidity, updateObject } from '../../../../shared/utility';
+import { checkValidity, updateObject, dateToString } from '../../../../shared/utility';
 
-const AddTaskDialog = () => {
+const EditTaskDialog = () => {
   const { t } = useTranslation();
-  const { appDispatch } = useContext(AppContext);
-  const { tasksDispatch } = useContext(TasksContext);
+  const { appState, appDispatch } = useContext(AppContext);
+  const { tasks, tasksDispatch } = useContext(TasksContext);
 
-  const [addForm, setAddForm] = useState({
+  let selectedTask = null;
+
+  for (let task of tasks) {
+    if (task.id === appState.editModal.taskID) {
+      selectedTask = { ...task };
+    }
+  }
+
+  const [editForm, setEditForm] = useState({
     task: {
       elementType: 'input',
       elementConfig: {
@@ -25,11 +33,11 @@ const AddTaskDialog = () => {
         placeholder: t('Task'),
       },
       label: t('Task'),
-      value: '',
+      value: selectedTask.task,
       validation: {
         required: true,
       },
-      valid: false,
+      valid: true,
       touched: false,
     },
     startDate: {
@@ -39,11 +47,11 @@ const AddTaskDialog = () => {
         placeholder: t('StartDate'),
       },
       label: t('StartDate'),
-      value: '',
+      value: dateToString(selectedTask.startDate),
       validation: {
         required: true,
       },
-      valid: false,
+      valid: true,
       touched: false,
     },
     endDate: {
@@ -53,63 +61,62 @@ const AddTaskDialog = () => {
         placeholder: t('EndDate'),
       },
       label: t('EndDate'),
-      value: '',
+      value: dateToString(selectedTask.endDate),
       validation: {
         required: true,
       },
-      valid: false,
+      valid: true,
       touched: false,
     },
   });
 
-  const [formIsValid, setFormIsValid] = useState(false);
+  const [formIsValid, setFormIsValid] = useState(true);
 
   const closeDialogHandler = () => {
     appDispatch({
-      type: actiontypes.HIDE_ADD_TASK_DIALOG,
+      type: actiontypes.HIDE_EDIT_TASK_DIALOG,
     });
   };
 
   const inputChangedHandler = (event, inputIdentifier) => {
-    const updatedFormElement = updateObject(addForm[inputIdentifier], {
+    const updatedFormElement = updateObject(editForm[inputIdentifier], {
       value: event.target.value,
-      valid: checkValidity(event.target.value, addForm[inputIdentifier].validation),
+      valid: checkValidity(event.target.value, editForm[inputIdentifier].validation),
       touched: true,
     });
-    const updatedOrderForm = updateObject(addForm, {
+    const updatedEditForm = updateObject(editForm, {
       [inputIdentifier]: updatedFormElement,
     });
 
     let formIsValid = true;
-    for (let inputIdentifier in updatedOrderForm) {
-      formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+    for (let inputIdentifier in updatedEditForm) {
+      formIsValid = updatedEditForm[inputIdentifier].valid && formIsValid;
     }
-    setAddForm(updatedOrderForm);
+    setEditForm(updatedEditForm);
     setFormIsValid(formIsValid);
   };
 
-  const addTaskHandler = () => {
+  const editTaskHandler = () => {
     if (formIsValid) {
       tasksDispatch({
-        type: actiontypes.ADD_TASK,
-        task: {
-          task: addForm.task.value,
-          startDate: new Date(Date.parse(addForm.startDate.value)),
-          endDate: new Date(Date.parse(addForm.endDate.value)),
-        },
+        type: actiontypes.EDIT_TASK,
+        id: selectedTask.id,
+        task: editForm.task.value,
+        startDate: new Date(Date.parse(editForm.startDate.value)),
+        endDate: new Date(Date.parse(editForm.endDate.value)),
       });
 
       appDispatch({
-        type: actiontypes.HIDE_ADD_TASK_DIALOG,
+        type: actiontypes.HIDE_EDIT_TASK_DIALOG,
       });
     }
   };
 
   const formElementsArray = [];
-  for (let key in addForm) {
+  for (let key in editForm) {
     formElementsArray.push({
       id: key,
-      config: addForm[key],
+      config: editForm[key],
     });
   }
   const formElements = formElementsArray.map((formElement) => (
@@ -127,14 +134,14 @@ const AddTaskDialog = () => {
   ));
 
   return (
-    <ModalDialog title={t('AddTask')}>
+    <ModalDialog title={t('Edit')}>
       <div className={classes.textInputs}>{formElements}</div>
       <div className={classes.buttonArea}>
         <Button clickHandler={closeDialogHandler}>{t('Cancel')}</Button>
-        <Button clickHandler={addTaskHandler}>{t('AddTask')}</Button>
+        <Button clickHandler={editTaskHandler}>{t('Edit')}</Button>
       </div>
     </ModalDialog>
   );
 };
 
-export default AddTaskDialog;
+export default EditTaskDialog;

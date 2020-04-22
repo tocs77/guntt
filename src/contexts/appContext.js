@@ -5,6 +5,10 @@ import { updateObject } from '../shared/utility';
 
 export const initialState = {
   showAddModal: false,
+  editModal: {
+    show: false,
+    taskID: null,
+  },
   TaskPopupMenu: {
     show: false,
     x: null,
@@ -51,6 +55,13 @@ export const appReducer = (state = initialState, action) => {
     case actionTypes.LOCK_TASK_POPUP_MENU:
       const newTaskMenu = updateObject(state.TaskPopupMenu, { locked: true });
       return updateObject(state, { TaskPopupMenu: newTaskMenu });
+
+    case actionTypes.SHOW_EDIT_TASK_DIALOG:
+      const newEditMenu = updateObject(state.editModal, { show: true, taskID: action.id });
+      return updateObject(state, { editModal: newEditMenu });
+
+    case actionTypes.HIDE_EDIT_TASK_DIALOG:
+      return updateObject(state, { editModal: { show: false, taskID: null } });
 
     default:
       return state;

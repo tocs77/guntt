@@ -22,6 +22,6 @@
 
 .submenu:hover {
   background: linear-gradient(90deg, rgba(66, 133, 118, 0.8), rgba(44, 109, 80, 0.8));
-  font-size: 1.6;
+  font-size: 1.6rem;
   color: beige;
 }

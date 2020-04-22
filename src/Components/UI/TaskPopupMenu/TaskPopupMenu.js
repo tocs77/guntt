@@ -9,7 +9,7 @@ import classes from './TaskPopupMenu.module.css';
 
 const TaskPopupMenu = (props) => {
   const { appState, appDispatch } = useContext(AppContext);
-  const { tasks } = useContext(TasksContext);
+  const { tasks, tasksDispatch } = useContext(TasksContext);
   const { t } = useTranslation();
 
   let selectedTask = null;
@@ -34,6 +34,41 @@ const TaskPopupMenu = (props) => {
       forced: true,
     });
   };
+
+  const editTaksHandler = (id) => {
+    appDispatch({
+      type: actiontypes.HIDE_TASK_POPUP_MENU,
+      forced: true,
+    });
+    appDispatch({
+      type: actiontypes.SHOW_EDIT_TASK_DIALOG,
+      id: id,
+    });
+  };
+
+  const doneTaskHandler = (id) => {
+    tasksDispatch({
+      type: actiontypes.DONE_TASK,
+      id: id,
+      value: true,
+    });
+    appDispatch({
+      type: actiontypes.HIDE_TASK_POPUP_MENU,
+      forced: true,
+    });
+  };
+
+  const deleteTaskHandler = (id) => {
+    tasksDispatch({
+      type: actiontypes.DELETE_TASK,
+      id: id,
+    });
+    appDispatch({
+      type: actiontypes.HIDE_TASK_POPUP_MENU,
+      forced: true,
+    });
+  };
+
   return (
     <div
       className={classes.popupMenu}
@@ -42,9 +77,15 @@ const TaskPopupMenu = (props) => {
       style={{ top: props.y, left: props.x }}
     >
       <div className={classes.header}>{selectedTask.task}</div>
-      <div className={classes.submenu}>{t('Edit')}</div>
-      <div className={classes.submenu}>{t('Done')}</div>
-      <div className={classes.submenu}>{t('Delete')}</div>
+      <div className={classes.submenu} onClick={() => editTaksHandler(selectedTask.id)}>
+        {t('Edit')}
+      </div>
+      <div className={classes.submenu} onClick={() => doneTaskHandler(selectedTask.id)}>
+        {t('Done')}
+      </div>
+      <div className={classes.submenu} onClick={() => deleteTaskHandler(selectedTask.id)}>
+        {t('Delete')}
+      </div>
     </div>
   );
 };

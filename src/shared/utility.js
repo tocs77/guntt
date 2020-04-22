@@ -39,3 +39,8 @@ export const checkValidity = (value, rules) => {
 export const makePercentString = (value) => {
   return value.toString() + '%';
 };
+
+// Gets Date() object and returns date string in ISO format without time
+export const dateToString = (date) => {
+  return date.toISOString().slice(0, 10);
+};
