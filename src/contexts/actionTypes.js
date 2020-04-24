@@ -3,7 +3,8 @@ export const GET_ALL_TASKS = 'GET_ALL_TASKS';
 export const HIGHLIGHT_TASK = 'HIGHLIGHT_TASK';
 export const DELETE_TASK = 'DELETE_TASK';
 export const DONE_TASK = 'DONE_TASK';
-export const EDIT_TASK = 'EDIT TASK';
+export const EDIT_TASK = 'EDIT_TASK';
+export const INIT_TASKS = 'INIT_TASKS';
 
 export const SHOW_ADD_TASK_DIALOG = 'SHOW_ADD_TASK_DIALOG';
 export const HIDE_ADD_TASK_DIALOG = 'HIDE_ADD_TASK_DIALOG';

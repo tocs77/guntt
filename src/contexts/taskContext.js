@@ -1,4 +1,6 @@
 import React from 'react';
+
+import axios from '../axios-instance';
 import * as actionTypes from './actionTypes';
 
 export const initialTasks = [
@@ -52,7 +54,30 @@ export const initialTasks = [
   // },
 ];
 
-export const taskReducer = (tasks = initialTasks, action) => {
+export const initTasks = () => {
+  axios
+    .get('/tasks')
+    .then((response) => {
+      const newTasks = response.data.map((task) => {
+        const t = {};
+        t.taks = task.task;
+        t.startDate = new Date(task.startDate);
+        t.endDate = new Date(task.endDate);
+        t.done = task.done;
+        t.id = task.id;
+        t.highlight = false;
+        return t;
+      });
+      console.log("new tasks", newTasks)
+      return newTasks;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    return []
+};
+
+export const taskReducer = (tasks = () => initTasks(), action) => {
   switch (action.type) {
     case actionTypes.ADD_TASK:
       tasks = [...tasks];
@@ -96,6 +121,9 @@ export const taskReducer = (tasks = initialTasks, action) => {
         }
       }
       return tasks;
+
+    case actionTypes.INIT_TASKS:
+      
 
     default:
       return tasks;

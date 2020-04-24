@@ -17,7 +17,6 @@ const HEADER_HEIGHT = 50;
 
 const Diagram = () => {
   const { tasks } = useContext(TasksContext);
-
   if (tasks.length === 0) {
     return <div className={classes.message}>No tasks yet</div>;
   }
