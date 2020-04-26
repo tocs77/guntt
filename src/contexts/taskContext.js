@@ -1,83 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import axios from '../axios-instance';
-import * as actionTypes from './actionTypes';
+import * as actionTypes from "./actionTypes";
 
-export const initialTasks = [
-  {
-    startDate: new Date('2020-03-27T00:00:00Z'),
-    endDate: new Date('2020-03-30T00:00:00Z'),
-    task: 'Develop SVG',
-    id: 1,
-    done: false,
-    highlight: false,
-  },
-  {
-    startDate: new Date('2020-03-20T00:00:00Z'),
-    endDate: new Date('2020-04-07T00:00:00Z'),
-    task: 'Buy Milk',
-    id: 2,
-    done: false,
-    highlight: false,
-  },
-  {
-    startDate: new Date('2020-03-15T00:00:00Z'),
-    endDate: new Date('2020-03-29T00:00:00Z'),
-    task: 'Find key',
-    id: 3,
-    done: false,
-    highlight: false,
-  },
-  {
-    startDate: new Date('2020-03-17T00:00:00Z'),
-    endDate: new Date('2020-03-23T00:00:00Z'),
-    task: 'Clear room',
-    id: 4,
-    done: false,
-    highlight: false,
-  },
-  {
-    startDate: new Date('2020-03-26T00:00:00Z'),
-    endDate: new Date('2020-04-08T00:00:00Z'),
-    task: 'Build rocket',
-    id: 5,
-    done: false,
-    highlight: false,
-  },
-  // {
-  //   startDate: new Date("April 17, 2020 00:00:00"),
-  //   endDate: new Date("May 8, 2020 00:00:00"),
-  //   task: "Fix SVG problems",
-  //   id: 6,
-  //   done: false,
-  //   highlight: false,
-  // },
-];
-
-export const initTasks = () => {
-  axios
-    .get('/tasks')
-    .then((response) => {
-      const newTasks = response.data.map((task) => {
-        const t = {};
-        t.taks = task.task;
-        t.startDate = new Date(task.startDate);
-        t.endDate = new Date(task.endDate);
-        t.done = task.done;
-        t.id = task.id;
-        t.highlight = false;
-        return t;
-      });
-      console.log("new tasks", newTasks)
-      return newTasks;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    return []
-};
-
-export const taskReducer = (tasks = () => initTasks(), action) => {
+export const taskReducer = (tasks = [], action) => {
   switch (action.type) {
     case actionTypes.ADD_TASK:
       tasks = [...tasks];
@@ -123,7 +48,8 @@ export const taskReducer = (tasks = () => initTasks(), action) => {
       return tasks;
 
     case actionTypes.INIT_TASKS:
-      
+      tasks = [...action.tasks];
+      return tasks;
 
     default:
       return tasks;

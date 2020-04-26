@@ -9,12 +9,12 @@ import AddTaskDialog from './Components/UI/modalDialog/addTaskDlg/addTaskDlg';
 import EditTaskDialog from './Components/UI/modalDialog/editTaskDlg/editTaskDlg';
 import TaskPopupMenu from './Components/UI/TaskPopupMenu/TaskPopupMenu';
 
-import { taskReducer, initialTasks, TasksContext, initTasks } from './contexts/taskContext';
+import { taskReducer, TasksContext } from './contexts/taskContext';
 
 import { appReducer, initialState, AppContext } from './contexts/appContext';
 
 function App() {
-  const [tasks, tasksDispatch] = useReducer(taskReducer, initTasks());
+  const [tasks, tasksDispatch] = useReducer(taskReducer, []);
   const [appState, appDispatch] = useReducer(appReducer, initialState);
   return (
     <AppContext.Provider value={{ appState, appDispatch }}>

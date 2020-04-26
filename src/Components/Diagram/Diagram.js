@@ -1,22 +1,46 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import Task from './Task/Task';
 import DayGrid from './DayGrid/DayGrid';
+import axios from '../../axios-instance';
 
 import classes from './Diagram.module.css';
 
 import { TasksContext } from '../../contexts/taskContext';
+import * as actionTypes from '../../contexts/actionTypes';
 
 import { makePercentString } from '../../shared/utility';
 
 const millisecondInDay = 1000 * 3600 * 24;
 
 const TASK_LABEL_WIDTH = 20; // 20% task labels width
-const TASK_HEIGHT = 30; //? Task height in pixels  Maybe in procents?
+const TASK_HEIGHT = 30; //? Task height in pixels  Maybe in percents?
 const HEADER_HEIGHT = 50;
 
 const Diagram = () => {
-  const { tasks } = useContext(TasksContext);
+  const { tasks, tasksDispatch } = useContext(TasksContext);
+
+  useEffect(() => {
+    axios
+      .get('/tasks')
+      .then((response) => {
+        const newTasks = response.data.map((task) => {
+          const t = {};
+          t.task = task.task;
+          t.startDate = new Date(task.startDate);
+          t.endDate = new Date(task.endDate);
+          t.done = task.done;
+          t.id = task.id;
+          t.highlight = false;
+          return t;
+        });
+        tasksDispatch({ type: actionTypes.INIT_TASKS, tasks: newTasks });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [tasksDispatch]);
+
   if (tasks.length === 0) {
     return <div className={classes.message}>No tasks yet</div>;
   }
@@ -61,8 +85,7 @@ const Diagram = () => {
     <svg
       id='diagram'
       className={classes.diagram}
-      height={TASK_HEIGHT * tasks.length + HEADER_HEIGHT}
-    >
+      height={TASK_HEIGHT * tasks.length + HEADER_HEIGHT}>
       <line
         x1='0%'
         y1={HEADER_HEIGHT}
