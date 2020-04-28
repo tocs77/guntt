@@ -8,6 +8,7 @@ import TaskPanel from './TaskPanel/TaskPanel';
 
 import { TasksContext } from '../../../contexts/taskContext';
 import * as actionTypes from '../../../contexts/actionTypes';
+import * as apiFunctions from '../../../apiFunctions';
 
 const SideMenu = () => {
   const { tasks, tasksDispatch } = useContext(TasksContext);
@@ -30,11 +31,14 @@ const SideMenu = () => {
     });
   };
 
-  const deleteTaskHandler = (id) => {
-    tasksDispatch({
-      type: actionTypes.DELETE_TASK,
-      id: id,
-    });
+  const deleteTaskHandler = async (id) => {
+    const res = await apiFunctions.deleteTask(id);
+    if (res === 'Success') {
+      tasksDispatch({
+        type: actionTypes.DELETE_TASK,
+        id: id,
+      });
+    }
   };
 
   const doneTaskHandler = (id) => {

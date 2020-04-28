@@ -2,12 +2,12 @@ import React, { useContext, useEffect } from 'react';
 
 import Task from './Task/Task';
 import DayGrid from './DayGrid/DayGrid';
-import axios from '../../axios-instance';
 
 import classes from './Diagram.module.css';
 
 import { TasksContext } from '../../contexts/taskContext';
 import * as actionTypes from '../../contexts/actionTypes';
+import * as apiFunctions from '../../apiFunctions';
 
 import { makePercentString } from '../../shared/utility';
 
@@ -21,24 +21,11 @@ const Diagram = () => {
   const { tasks, tasksDispatch } = useContext(TasksContext);
 
   useEffect(() => {
-    axios
-      .get('/tasks')
-      .then((response) => {
-        const newTasks = response.data.map((task) => {
-          const t = {};
-          t.task = task.task;
-          t.startDate = new Date(task.startDate);
-          t.endDate = new Date(task.endDate);
-          t.done = task.done;
-          t.id = task.id;
-          t.highlight = false;
-          return t;
-        });
-        tasksDispatch({ type: actionTypes.INIT_TASKS, tasks: newTasks });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    async function f() {
+      const newTasks = await apiFunctions.getAllTasks();
+      tasksDispatch({ type: actionTypes.INIT_TASKS, tasks: newTasks });
+    }
+    f();
   }, [tasksDispatch]);
 
   if (tasks.length === 0) {
@@ -85,7 +72,8 @@ const Diagram = () => {
     <svg
       id='diagram'
       className={classes.diagram}
-      height={TASK_HEIGHT * tasks.length + HEADER_HEIGHT}>
+      height={TASK_HEIGHT * tasks.length + HEADER_HEIGHT}
+    >
       <line
         x1='0%'
         y1={HEADER_HEIGHT}

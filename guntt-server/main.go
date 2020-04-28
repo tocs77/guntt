@@ -18,14 +18,22 @@ type Task struct {
 	EndDate   time.Time `json:"endDate"`
 }
 
+//
+type OperationResponce struct {
+	OperationStatus string `json:"OperationStatus"`
+}
+
 var tasks []Task
 
 func main() {
 
 	tasks = testFillTasks(tasks)
-	fmt.Println(tasks)
 	router := mux.NewRouter()
 	router.HandleFunc("/tasks", getTasks).Methods("GET")
+	router.HandleFunc("/tasks", setOptions).Methods("OPTIONS")
+	router.HandleFunc("/tasks", deleteTask).Methods("DELETE")
+
+	fmt.Println("Guntt server started at", time.Now())
 
 	http.ListenAndServe(":3030", router)
 }
@@ -33,6 +41,32 @@ func main() {
 func getTasks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(tasks)
+}
+
+func setOptions(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Received request options")
+	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET, POST, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "origin, content-type, accept")
+	w.Header().Set("Accept", "text/html, application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+}
+func deleteTask(w http.ResponseWriter, r *http.Request) {
+	var t Task
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewDecoder(r.Body).Decode(&t)
+	res := OperationResponce{"Failed"}
+	for index, task := range tasks {
+		if task.ID == t.ID {
+			tasks[index] = tasks[len(tasks)-1]
+			tasks[len(tasks)-1] = Task{}
+			tasks = tasks[:len(tasks)-1]
+			res.OperationStatus = "Success"
+			json.NewEncoder(w).Encode(res)
+
+		}
+	}
 }
 
 func testFillTasks(tasks []Task) []Task {

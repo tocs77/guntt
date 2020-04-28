@@ -60,7 +60,7 @@ const Task = (props) => {
     taskClass = classes.color_done;
     taskTextClasses.push(classes.textDone);
   }
-  // taskClasses.push("color_" + toString(props.index));
+
   return (
     <React.Fragment>
       <text

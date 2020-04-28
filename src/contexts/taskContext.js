@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import * as actionTypes from "./actionTypes";
+import * as actionTypes from './actionTypes';
 
 export const taskReducer = (tasks = [], action) => {
   switch (action.type) {
