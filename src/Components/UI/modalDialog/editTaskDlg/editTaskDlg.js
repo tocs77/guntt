@@ -10,6 +10,7 @@ import Input from '../../Input/Input';
 import { AppContext } from '../../../../contexts/appContext';
 import { TasksContext } from '../../../../contexts/taskContext';
 import * as actiontypes from '../../../../contexts/actionTypes';
+import * as apiFunctions from '../../../../apiFunctions';
 import { checkValidity, updateObject, dateToString } from '../../../../shared/utility';
 
 const EditTaskDialog = () => {
@@ -96,18 +97,26 @@ const EditTaskDialog = () => {
     setFormIsValid(formIsValid);
   };
 
-  const editTaskHandler = () => {
+  const editTaskHandler = async () => {
     if (formIsValid) {
-      tasksDispatch({
-        type: actiontypes.EDIT_TASK,
-        id: selectedTask.id,
-        task: editForm.task.value,
-        startDate: new Date(Date.parse(editForm.startDate.value)),
-        endDate: new Date(Date.parse(editForm.endDate.value)),
-      });
-
       appDispatch({
         type: actiontypes.HIDE_EDIT_TASK_DIALOG,
+      });
+    }
+    const newTask = {
+      id: selectedTask.id,
+      task: editForm.task.value,
+      startDate: editForm.startDate.value,
+      endDate: editForm.endDate.value,
+    };
+    const response = await apiFunctions.updateTask(newTask);
+    if (response.operationResponce.OperationStatus === 'Success') {
+      tasksDispatch({
+        type: actiontypes.EDIT_TASK,
+        id: response.task.id,
+        task: response.task.task,
+        startDate: new Date(Date.parse(response.task.startDate)),
+        endDate: new Date(Date.parse(response.task.endDate)),
       });
     }
   };

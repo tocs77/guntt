@@ -49,6 +49,7 @@ func main() {
 	router.HandleFunc("/tasks", setOptions).Methods("OPTIONS")
 	router.HandleFunc("/tasks", deleteTask).Methods("DELETE")
 	router.HandleFunc("/tasks", addTask).Methods("POST")
+	router.HandleFunc("/tasks", updateTask).Methods(("PUT"))
 
 	fmt.Println("Guntt server started at", time.Now())
 
@@ -62,7 +63,7 @@ func getTasks(w http.ResponseWriter, r *http.Request) {
 
 func setOptions(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received request options")
-	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET, POST, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET, POST, DELETE, PUT")
 	w.Header().Set("Access-Control-Allow-Headers", "origin, content-type, accept")
 	w.Header().Set("Accept", "text/html, application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -80,8 +81,11 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 			tasks[index] = tasks[len(tasks)-1]
 			tasks[len(tasks)-1] = Task{}
 			tasks = tasks[:len(tasks)-1]
+
 			res.OperationStatus = "Success"
-			json.NewEncoder(w).Encode(res)
+			cr := CombinedResponce{task, res}
+			json.NewEncoder(w).Encode(cr)
+			break
 
 		}
 	}
@@ -91,7 +95,6 @@ func addTask(w http.ResponseWriter, r *http.Request) {
 
 	res := OperationResponce{"Failed"}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	fmt.Println("Got to add  ", r.Body)
 
 	var taskString TaskString
 	json.NewDecoder(r.Body).Decode(&taskString)
@@ -99,7 +102,7 @@ func addTask(w http.ResponseWriter, r *http.Request) {
 	var task Task
 	task.Task = taskString.Task
 	task.StartDate = parseTime(taskString.StartDate)
-	task.EndDate = parseTime((taskString.EndDate))
+	task.EndDate = parseTime(taskString.EndDate)
 	task.Done = taskString.Done
 	task.ID = uuid.New().String()
 	fmt.Println("Added task ", task)
@@ -108,6 +111,37 @@ func addTask(w http.ResponseWriter, r *http.Request) {
 
 	cr := CombinedResponce{task, res}
 	json.NewEncoder(w).Encode(cr)
+
+}
+
+func updateTask(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Update task")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	var taskString TaskString
+	json.NewDecoder(r.Body).Decode(&taskString)
+
+	res := OperationResponce{"Failed"}
+	for index, task := range tasks {
+
+		newTask := task
+		if task.ID == taskString.ID {
+			if taskString.Task != "" {
+				newTask.Task = taskString.Task
+			}
+			if taskString.StartDate != "" {
+				newTask.StartDate = parseTime(taskString.StartDate)
+			}
+			if taskString.EndDate != "" {
+				newTask.EndDate = parseTime(taskString.EndDate)
+			}
+			newTask.Done = taskString.Done
+			res.OperationStatus = "Success"
+			cr := CombinedResponce{newTask, res}
+			json.NewEncoder(w).Encode(cr)
+			tasks[index] = newTask
+			break
+		}
+	}
 
 }
 

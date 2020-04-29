@@ -32,8 +32,8 @@ const SideMenu = () => {
   };
 
   const deleteTaskHandler = async (id) => {
-    const res = await apiFunctions.deleteTask(id);
-    if (res === 'Success') {
+    const response = await apiFunctions.deleteTask(id);
+    if (response.operationResponce.OperationStatus === 'Success') {
       tasksDispatch({
         type: actionTypes.DELETE_TASK,
         id: id,
@@ -41,12 +41,15 @@ const SideMenu = () => {
     }
   };
 
-  const doneTaskHandler = (id) => {
-    tasksDispatch({
-      type: actionTypes.DONE_TASK,
-      id: id,
-      value: true,
-    });
+  const doneTaskHandler = async (id) => {
+    const response = await apiFunctions.updateTask({ id: id, done: true }); //! Maybe need to pass task to done function
+    if (response.operationResponce.OperationStatus === 'Success') {
+      tasksDispatch({
+        type: actionTypes.DONE_TASK,
+        id: response.task.id,
+        value: response.task.done,
+      });
+    }
   };
 
   const tasksElements = tasks.map((task) => {

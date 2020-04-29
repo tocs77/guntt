@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 
 import { AppContext } from '../../../contexts/appContext';
 import { TasksContext } from '../../../contexts/taskContext';
-import * as actiontypes from '../../../contexts/actionTypes';
+import * as actionTypes from '../../../contexts/actionTypes';
+import * as apiFunctions from '../../../apiFunctions';
 
 import classes from './TaskPopupMenu.module.css';
 
@@ -23,50 +24,57 @@ const TaskPopupMenu = (props) => {
   const mouseEnterHandler = () => {
     if (appState.TaskPopupMenu.id !== null) {
       appDispatch({
-        type: actiontypes.LOCK_TASK_POPUP_MENU,
+        type: actionTypes.LOCK_TASK_POPUP_MENU,
       });
     }
   };
 
   const mouseLeaveHandler = () => {
     appDispatch({
-      type: actiontypes.HIDE_TASK_POPUP_MENU,
+      type: actionTypes.HIDE_TASK_POPUP_MENU,
       forced: true,
     });
   };
 
   const editTaksHandler = (id) => {
     appDispatch({
-      type: actiontypes.HIDE_TASK_POPUP_MENU,
+      type: actionTypes.HIDE_TASK_POPUP_MENU,
       forced: true,
     });
     appDispatch({
-      type: actiontypes.SHOW_EDIT_TASK_DIALOG,
+      type: actionTypes.SHOW_EDIT_TASK_DIALOG,
       id: id,
     });
   };
 
-  const doneTaskHandler = (id) => {
-    tasksDispatch({
-      type: actiontypes.DONE_TASK,
-      id: id,
-      value: true,
-    });
+  const doneTaskHandler = async (id) => {
     appDispatch({
-      type: actiontypes.HIDE_TASK_POPUP_MENU,
+      type: actionTypes.HIDE_TASK_POPUP_MENU,
       forced: true,
     });
+    const response = await apiFunctions.updateTask({ id: id, done: true }); //! Maybe need to pass task to done function
+    if (response.operationResponce.OperationStatus === 'Success') {
+      tasksDispatch({
+        type: actionTypes.DONE_TASK,
+        id: response.task.id,
+        value: response.task.done,
+      });
+    }
   };
 
-  const deleteTaskHandler = (id) => {
-    tasksDispatch({
-      type: actiontypes.DELETE_TASK,
-      id: id,
-    });
+  const deleteTaskHandler = async (id) => {
     appDispatch({
-      type: actiontypes.HIDE_TASK_POPUP_MENU,
+      type: actionTypes.HIDE_TASK_POPUP_MENU,
       forced: true,
     });
+
+    const response = await apiFunctions.deleteTask(id);
+    if (response.operationResponce.OperationStatus === 'Success') {
+      tasksDispatch({
+        type: actionTypes.DELETE_TASK,
+        id: id,
+      });
+    }
   };
 
   return (

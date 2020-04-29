@@ -20,10 +20,15 @@ export const getAllTasks = async () => {
 
 export const deleteTask = async (taskId) => {
   let response = await axios.delete('/tasks', { data: { id: taskId } });
-  return response.data.OperationStatus;
+  return response.data;
 };
 
 export const addTask = async (task) => {
   let response = await axios.post('/tasks', { ...task });
+  return response.data;
+};
+
+export const updateTask = async (task) => {
+  let response = await axios.put('/tasks', { ...task });
   return response.data;
 };
