@@ -9,8 +9,9 @@ import Input from '../../Input/Input';
 
 import { AppContext } from '../../../../contexts/appContext';
 import { TasksContext } from '../../../../contexts/taskContext';
-import * as actiontypes from '../../../../contexts/actionTypes';
+import * as actionTypes from '../../../../contexts/actionTypes';
 import { checkValidity, updateObject } from '../../../../shared/utility';
+import * as apiFunctions from '../../../../apiFunctions';
 
 const AddTaskDialog = () => {
   const { t } = useTranslation();
@@ -66,7 +67,7 @@ const AddTaskDialog = () => {
 
   const closeDialogHandler = () => {
     appDispatch({
-      type: actiontypes.HIDE_ADD_TASK_DIALOG,
+      type: actionTypes.HIDE_ADD_TASK_DIALOG,
     });
   };
 
@@ -88,20 +89,24 @@ const AddTaskDialog = () => {
     setFormIsValid(formIsValid);
   };
 
-  const addTaskHandler = () => {
+  const addTaskHandler = async () => {
     if (formIsValid) {
-      tasksDispatch({
-        type: actiontypes.ADD_TASK,
-        task: {
-          task: addForm.task.value,
-          startDate: new Date(Date.parse(addForm.startDate.value)),
-          endDate: new Date(Date.parse(addForm.endDate.value)),
-        },
+      const newTask = {
+        task: addForm.task.value,
+        startDate: addForm.startDate.value,
+        endDate: addForm.endDate.value,
+      };
+      appDispatch({
+        type: actionTypes.HIDE_ADD_TASK_DIALOG,
       });
 
-      appDispatch({
-        type: actiontypes.HIDE_ADD_TASK_DIALOG,
-      });
+      const response = await apiFunctions.addTask(newTask);
+      if (response.operationResponce.OperationStatus === 'Success') {
+        tasksDispatch({
+          type: actionTypes.ADD_TASK,
+          task: response.task,
+        });
+      }
     }
   };
 

@@ -22,3 +22,8 @@ export const deleteTask = async (taskId) => {
   let response = await axios.delete('/tasks', { data: { id: taskId } });
   return response.data.OperationStatus;
 };
+
+export const addTask = async (task) => {
+  let response = await axios.post('/tasks', { ...task });
+  return response.data;
+};

@@ -6,9 +6,9 @@ export const taskReducer = (tasks = [], action) => {
   switch (action.type) {
     case actionTypes.ADD_TASK:
       tasks = [...tasks];
-      action.task.id = Date(); //TODO id will be from server
       action.task.highlight = false;
-      action.task.done = false;
+      action.task.startDate = new Date(action.task.startDate);
+      action.task.endDate = new Date(action.task.endDate);
       tasks.push(action.task);
       return tasks;
     case actionTypes.GET_ALL_TASKS:
