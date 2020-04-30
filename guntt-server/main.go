@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -41,11 +42,18 @@ type CombinedResponce struct {
 	OperationResponse OperationResponse `json:"operationResponce"`
 }
 
-var tasks []Task
+var db *sql.DB
+
+func logFatal(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func main() {
-
-	tasks = testFillTasks(tasks)
+	var err error
+	db, err = sql.Open("sqlite3", "./gunnt.db")
+	logFatal(err)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/tasks", getTasks).Methods("GET")
@@ -60,6 +68,19 @@ func main() {
 }
 
 func getTasks(w http.ResponseWriter, r *http.Request) {
+
+	rows, err :=
+		db.Query("SELECT id, task, startDate, endDate, done FROM tasks")
+
+	logFatal(err)
+	defer rows.Close()
+	tasks := []Task{}
+	for rows.Next() {
+		task := Task{}
+		err = rows.Scan(&task.ID, &task.Task, &task.StartDate, &task.EndDate, &task.Done)
+		logFatal(err)
+		tasks = append(tasks, task)
+	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(tasks)
 }
@@ -78,20 +99,16 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewDecoder(r.Body).Decode(&t)
+
 	res := OperationResponse{"Failed"}
-	for index, task := range tasks {
-		if task.ID == t.ID {
-			tasks[index] = tasks[len(tasks)-1]
-			tasks[len(tasks)-1] = Task{}
-			tasks = tasks[:len(tasks)-1]
+	var err error
+	sqlStatement := `DELETE FROM tasks where id=$1`
+	_, err = db.Exec(sqlStatement, t.ID)
+	logFatal(err)
 
-			res.OperationStatus = "Success"
-			cr := CombinedResponce{task, res}
-			json.NewEncoder(w).Encode(cr)
-			break
-
-		}
-	}
+	res.OperationStatus = "Success"
+	cr := CombinedResponce{t, res}
+	json.NewEncoder(w).Encode(cr)
 }
 
 func addTask(w http.ResponseWriter, r *http.Request) {
@@ -109,7 +126,12 @@ func addTask(w http.ResponseWriter, r *http.Request) {
 	task.Done = taskString.Done
 	task.ID = uuid.New().String()
 	fmt.Println("Added task ", task)
-	tasks = append(tasks, task)
+
+	var err error
+	sqlStatement := `INSERT INTO tasks (id, task, startDate, endDate, done) values($1, $2, $3, $4, $5)`
+
+	_, err = db.Exec(sqlStatement, task.ID, task.Task, task.StartDate, task.EndDate, task.Done)
+	logFatal(err)
 	res.OperationStatus = "Success"
 
 	cr := CombinedResponce{task, res}
@@ -118,50 +140,29 @@ func addTask(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateTask(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Update task")
+	fmt.Println("Going to update task")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var taskString TaskString
 	json.NewDecoder(r.Body).Decode(&taskString)
 
 	res := OperationResponse{"Failed"}
-	for index, task := range tasks {
 
-		newTask := task
-		if task.ID == taskString.ID {
-			if taskString.Task != "" {
-				newTask.Task = taskString.Task
-			}
-			if taskString.StartDate != "" {
-				newTask.StartDate = parseTime(taskString.StartDate)
-			}
-			if taskString.EndDate != "" {
-				newTask.EndDate = parseTime(taskString.EndDate)
-			}
-			newTask.Done = taskString.Done
-			res.OperationStatus = "Success"
-			cr := CombinedResponce{newTask, res}
-			json.NewEncoder(w).Encode(cr)
-			tasks[index] = newTask
-			break
-		}
-	}
+	newTask := Task{}
+	newTask.Task = taskString.Task
+	newTask.ID = taskString.ID
+	newTask.StartDate = parseTime(taskString.StartDate)
+	newTask.EndDate = parseTime(taskString.EndDate)
+	newTask.Done = taskString.Done
 
-}
+	var err error
+	sqlStatement := `UPDATE tasks SET task=$1, startDate=$2, endDate=$3, done=$4 where id=$5`
 
-func testFillTasks(tasks []Task) []Task {
+	_, err = db.Exec(sqlStatement, newTask.Task, newTask.StartDate, newTask.EndDate, newTask.Done, newTask.ID)
+	logFatal(err)
+	res.OperationStatus = "Success"
 
-	database, _ :=
-		sql.Open("sqlite3", "./gunnt.db")
-	rows, _ :=
-		database.Query("SELECT id, task, startDate, endDate, done FROM tasks")
-
-	for rows.Next() {
-		task := Task{}
-		rows.Scan(&task.ID, &task.Task, &task.StartDate, &task.EndDate, &task.Done)
-		tasks = append(tasks, task)
-	}
-
-	return tasks
+	cr := CombinedResponce{newTask, res}
+	json.NewEncoder(w).Encode(cr)
 
 }
 
