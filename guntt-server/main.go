@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 // Task structure
@@ -28,15 +30,15 @@ type TaskString struct {
 	EndDate   string `json:"endDate"`
 }
 
-// OperationResponce send to frontend operation status
-type OperationResponce struct {
+// OperationResponse send to frontend operation status
+type OperationResponse struct {
 	OperationStatus string `json:"OperationStatus"`
 }
 
-// CombinedResponce Task and OperationResponce to encode combined JSON
+// CombinedResponce Task and OperationResponse to encode combined JSON
 type CombinedResponce struct {
 	Task              Task              `json:"task"`
-	OperationResponce OperationResponce `json:"operationResponce"`
+	OperationResponse OperationResponse `json:"operationResponce"`
 }
 
 var tasks []Task
@@ -44,6 +46,7 @@ var tasks []Task
 func main() {
 
 	tasks = testFillTasks(tasks)
+
 	router := mux.NewRouter()
 	router.HandleFunc("/tasks", getTasks).Methods("GET")
 	router.HandleFunc("/tasks", setOptions).Methods("OPTIONS")
@@ -75,7 +78,7 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewDecoder(r.Body).Decode(&t)
-	res := OperationResponce{"Failed"}
+	res := OperationResponse{"Failed"}
 	for index, task := range tasks {
 		if task.ID == t.ID {
 			tasks[index] = tasks[len(tasks)-1]
@@ -93,7 +96,7 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 
 func addTask(w http.ResponseWriter, r *http.Request) {
 
-	res := OperationResponce{"Failed"}
+	res := OperationResponse{"Failed"}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	var taskString TaskString
@@ -120,7 +123,7 @@ func updateTask(w http.ResponseWriter, r *http.Request) {
 	var taskString TaskString
 	json.NewDecoder(r.Body).Decode(&taskString)
 
-	res := OperationResponce{"Failed"}
+	res := OperationResponse{"Failed"}
 	for index, task := range tasks {
 
 		newTask := task
@@ -147,13 +150,19 @@ func updateTask(w http.ResponseWriter, r *http.Request) {
 
 func testFillTasks(tasks []Task) []Task {
 
-	tasks = append(tasks,
-		Task{Task: "Develop SVG", StartDate: parseTime("2020-03-27"), EndDate: parseTime("2020-03-30"), Done: false, ID: "1"},
-		Task{Task: "Buy Milk", StartDate: parseTime("2020-03-20"), EndDate: parseTime("2020-04-07"), Done: false, ID: "2"},
-		Task{Task: "Find key", StartDate: parseTime("2020-03-15"), EndDate: parseTime("2020-03-29"), Done: false, ID: "3"},
-		Task{Task: "Clear room", StartDate: parseTime("2020-03-17"), EndDate: parseTime("2020-03-23"), Done: false, ID: "4"},
-		Task{Task: "Build rocket", StartDate: parseTime("2020-03-20"), EndDate: parseTime("2020-04-08"), Done: false, ID: "5"})
+	database, _ :=
+		sql.Open("sqlite3", "./gunnt.db")
+	rows, _ :=
+		database.Query("SELECT id, task, startDate, endDate, done FROM tasks")
+
+	for rows.Next() {
+		task := Task{}
+		rows.Scan(&task.ID, &task.Task, &task.StartDate, &task.EndDate, &task.Done)
+		tasks = append(tasks, task)
+	}
+
 	return tasks
+
 }
 
 func parseTime(timeString string) time.Time {
