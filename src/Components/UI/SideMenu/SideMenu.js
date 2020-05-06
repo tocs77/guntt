@@ -42,7 +42,16 @@ const SideMenu = () => {
   };
 
   const doneTaskHandler = async (id) => {
-    const response = await apiFunctions.updateTask({ id: id, done: true }); //! Maybe need to pass task to done function
+    let taskToUpdate;
+
+    for (let task of tasks) {
+      if (task.id === id) {
+        taskToUpdate = { ...task };
+        break;
+      }
+    }
+    taskToUpdate.done = true;
+    const response = await apiFunctions.updateTask(taskToUpdate);
     if (response.operationResponce.OperationStatus === 'Success') {
       tasksDispatch({
         type: actionTypes.DONE_TASK,

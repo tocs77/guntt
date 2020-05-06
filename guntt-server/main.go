@@ -173,6 +173,14 @@ func parseTime(timeString string) time.Time {
 	if err == nil {
 		return t
 	}
+
+	layout = "2006-01-02T00:00:00.000Z"
+
+	t, err = time.Parse(layout, timeString)
+
+	if err == nil {
+		return t
+	}
 	fmt.Println("Error time parsing ", timeString, err)
 	return time.Now()
 }
