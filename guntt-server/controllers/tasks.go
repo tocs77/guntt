@@ -17,8 +17,8 @@ type OperationResponse struct {
 	OperationStatus string `json:"OperationStatus"`
 }
 
-// CombinedResponce Task and OperationResponse to encode combined JSON
-type CombinedResponce struct {
+// CombinedResponse Task and OperationResponse to encode combined JSON
+type CombinedResponse struct {
 	Task              models.Task       `json:"task"`
 	OperationResponse OperationResponse `json:"operationResponce"`
 }
@@ -70,7 +70,7 @@ func DeleteTask(db *sql.DB) http.HandlerFunc {
 		logFatal(err)
 
 		res.OperationStatus = "Success"
-		cr := CombinedResponce{t, res}
+		cr := CombinedResponse{t, res}
 		json.NewEncoder(w).Encode(cr)
 	}
 }
@@ -100,7 +100,7 @@ func AddTask(db *sql.DB) http.HandlerFunc {
 		logFatal(err)
 		res.OperationStatus = "Success"
 
-		cr := CombinedResponce{task, res}
+		cr := CombinedResponse{task, res}
 		json.NewEncoder(w).Encode(cr)
 
 	}
@@ -130,7 +130,7 @@ func UpdateTask(db *sql.DB) http.HandlerFunc {
 		logFatal(err)
 		res.OperationStatus = "Success"
 
-		cr := CombinedResponce{newTask, res}
+		cr := CombinedResponse{newTask, res}
 		json.NewEncoder(w).Encode(cr)
 
 	}

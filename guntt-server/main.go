@@ -32,6 +32,9 @@ func main() {
 	router.HandleFunc("/tasks", controllers.AddTask(db)).Methods("POST")
 	router.HandleFunc("/tasks", controllers.UpdateTask(db)).Methods("PUT")
 
+	router.HandleFunc("/auth", controllers.Authenticate(db)).Methods("POST")
+	router.HandleFunc("/auth", controllers.SetOptions(db)).Methods("OPTIONS")
+
 	fmt.Println("Guntt server started at", time.Now())
 
 	http.ListenAndServe(":3030", router)

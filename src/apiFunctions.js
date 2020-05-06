@@ -32,3 +32,9 @@ export const updateTask = async (task) => {
   let response = await axios.put('/tasks', { ...task });
   return response.data;
 };
+
+
+export const authenticate= async (authData) => {
+  let response = await axios.post('/auth', { ...authData });
+  return response.data;
+};
