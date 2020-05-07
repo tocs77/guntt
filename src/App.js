@@ -8,6 +8,7 @@ import StatusBar from './Components/UI/StatusBar/StatusBar';
 import AddTaskDialog from './Components/UI/modalDialog/addTaskDlg/addTaskDlg';
 import EditTaskDialog from './Components/UI/modalDialog/editTaskDlg/editTaskDlg';
 import TaskPopupMenu from './Components/UI/TaskPopupMenu/TaskPopupMenu';
+import Logindialog from './Components/UI/modalDialog/loginDlg/loginDlg'
 
 import { taskReducer, TasksContext } from './contexts/taskContext';
 
@@ -24,6 +25,7 @@ function App() {
         <Diagramm />
         {appState.showAddModal ? <AddTaskDialog /> : null}
         {appState.editModal.show ? <EditTaskDialog /> : null}
+        {appState.showLoginModal ? <Logindialog /> : null}
         {appState.TaskPopupMenu.show ? (
           <TaskPopupMenu
             x={appState.TaskPopupMenu.x}

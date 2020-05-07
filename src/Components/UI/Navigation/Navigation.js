@@ -26,12 +26,15 @@ const Navigation = (props) => {
 
 
   const authenticateHandler = async() => {
-    const authData = {
-      userName: "Alice",
-      password: "11"
-    }
-    const response = await apiFunctions.authenticate(authData);
-    console.log(response)
+    // const authData = {
+    //   userName: "Alice",
+    //   password: "11"
+    // }
+    // const response = await apiFunctions.authenticate(authData);
+    // console.log(response)
+    appDispatch({
+      type: actiontypes.SHOW_LOGIN_DIALOG
+    })
   }
   return (
     <nav className={classes.navigation} id={props.id}>

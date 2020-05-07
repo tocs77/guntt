@@ -5,6 +5,7 @@ import { updateObject } from '../shared/utility';
 
 export const initialState = {
   showAddModal: false,
+  showLoginModal: false,
   editModal: {
     show: false,
     taskID: null,
@@ -62,6 +63,12 @@ export const appReducer = (state = initialState, action) => {
 
     case actionTypes.HIDE_EDIT_TASK_DIALOG:
       return updateObject(state, { editModal: { show: false, taskID: null } });
+
+    case actionTypes.SHOW_LOGIN_DIALOG:
+      return updateObject(state, { showLoginModal: true });
+
+    case actionTypes.HIDE_LOGIN_DIALOG:
+      return updateObject(state, { showLoginModal: false });
 
     default:
       return state;

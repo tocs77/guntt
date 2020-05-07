@@ -44,7 +44,7 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 
 		res := OperationResponse{"Failed"}
 
-		sqlStatement := "SELECT name, pwdCash, token FROM users WHERE name=$1"
+		sqlStatement := "SELECT name, pwdHash, token FROM users WHERE name=$1"
 		row := db.QueryRow(sqlStatement, auth.UserName)
 
 		var bdAuthData authBD
@@ -54,18 +54,18 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 
 		fmt.Println("BD auth data", bdAuthData)
 
-		res.OperationStatus = "Success"
-
 		var authD authData
+		if calculateHash(auth.Password) == bdAuthData.pwdHash {
+			res.OperationStatus = "Success"
 
-		authD.UserName = bdAuthData.userName
-		authD.Token = bdAuthData.token
-		authD.DateExpired = bdAuthData.dateExpired
+			authD.UserName = bdAuthData.userName
+			authD.Token = bdAuthData.token
+			authD.DateExpired = bdAuthData.dateExpired
+		}
 
 		cr := authResponse{authD, res}
 		json.NewEncoder(w).Encode(cr)
 	}
-
 }
 
 func calculateHash(pwd string) string {

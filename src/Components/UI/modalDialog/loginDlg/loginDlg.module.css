@@ -1,0 +1,10 @@
+.textInputs {
+    width: 100%;
+}
+
+
+.buttonArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

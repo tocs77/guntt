@@ -20,5 +20,7 @@
   "September": "Сентябрь",
   "October": "Октябрь",
   "November": "Ноябрь",
-  "December": "Декабрь"
+  "December": "Декабрь",
+  "Name": "Имя",
+  "Password": "Пароль"
 }
