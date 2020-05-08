@@ -11,7 +11,6 @@ import { AppContext } from '../../../../contexts/appContext';
 import * as actionTypes from '../../../../contexts/actionTypes';
 import * as apiFunctions from '../../../../apiFunctions';
 import { checkValidity, updateObject } from '../../../../shared/utility';
-//import * as apiFunctions from '../../../../apiFunctions';
 
 const LoginDialog = () => {
   const { t } = useTranslation();
@@ -83,12 +82,25 @@ const LoginDialog = () => {
         password: loginForm.password.value,
       };
       const response = await apiFunctions.authenticate(authData);
-      console.log(response);
+
       if (response.operationResponse.OperationStatus === 'Failed') {
         setLoginMessage(t('Incorrect name or password'));
+        return;
+      }
+
+      if (response.operationResponse.OperationStatus === 'Success') {
+        var token = response.auth.token;
+        sessionStorage.setItem('authToken', token);
+        appDispatch({
+          type: actionTypes.APP_USER_ENTER,
+        });
+        appDispatch({
+          type: actionTypes.HIDE_LOGIN_DIALOG,
+        });
       }
     }
   };
+
   const formElementsArray = [];
   for (let key in loginForm) {
     formElementsArray.push({

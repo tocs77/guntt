@@ -6,6 +6,7 @@ import { updateObject } from '../shared/utility';
 export const initialState = {
   showAddModal: false,
   showLoginModal: false,
+  isLogged: false,
   editModal: {
     show: false,
     taskID: null,
@@ -69,6 +70,13 @@ export const appReducer = (state = initialState, action) => {
 
     case actionTypes.HIDE_LOGIN_DIALOG:
       return updateObject(state, { showLoginModal: false });
+
+    case actionTypes.APP_USER_ENTER:
+      return updateObject(state, { isLogged: true });
+
+    case actionTypes.APP_USER_EXIT:
+      sessionStorage.removeItem('authToken');
+      return updateObject(state, { isLogged: false });
 
     default:
       return state;

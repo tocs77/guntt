@@ -10,9 +10,9 @@ import { AppContext } from '../../../contexts/appContext';
 import * as actiontypes from '../../../contexts/actionTypes';
 
 const Navigation = (props) => {
-  const { appDispatch } = useContext(AppContext);
+  const { appState, appDispatch } = useContext(AppContext);
 
-  const {t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const changeLanguage = (code) => {
     i18n.changeLanguage(code);
   };
@@ -23,12 +23,17 @@ const Navigation = (props) => {
     });
   };
 
-
-  const authenticateHandler = async() => {
+  const authenticateHandler = () => {
     appDispatch({
-      type: actiontypes.SHOW_LOGIN_DIALOG
-    })
-  }
+      type: actiontypes.SHOW_LOGIN_DIALOG,
+    });
+  };
+
+  const logoutHandler = () => {
+    appDispatch({
+      type: actiontypes.APP_USER_EXIT,
+    });
+  };
   return (
     <nav className={classes.navigation} id={props.id}>
       <Logo />
@@ -41,9 +46,13 @@ const Navigation = (props) => {
         </Button>
       </div>
       <div className={classes.button_block}>
-        <Button>{t("UseFilter")}</Button>
-  <Button clickHandler={addTaskHandler}>{t("AddTask")}</Button>
-        <Button clickHandler={authenticateHandler}>{t("Login")}</Button>
+        <Button>{t('UseFilter')}</Button>
+        <Button clickHandler={addTaskHandler}>{t('AddTask')}</Button>
+        {!appState.isLogged ? (
+          <Button clickHandler={authenticateHandler}>{t('Login')}</Button>
+        ) : (
+          <Button clickHandler={logoutHandler}>{t('Logout')}</Button>
+        )}
       </div>
     </nav>
   );

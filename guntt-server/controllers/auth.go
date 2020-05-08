@@ -65,9 +65,10 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 			authD.UserName = bdAuthData.userName
 			authD.Token = bdAuthData.token
 			authD.DateExpired = bdAuthData.dateExpired
-			cr := authResponse{authD, res}
-			json.NewEncoder(w).Encode(cr)
 		}
+
+		cr := authResponse{authD, res}
+		json.NewEncoder(w).Encode(cr)
 
 	}
 }
