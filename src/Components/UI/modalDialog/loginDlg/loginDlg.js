@@ -9,12 +9,15 @@ import Input from '../../Input/Input';
 
 import { AppContext } from '../../../../contexts/appContext';
 import * as actionTypes from '../../../../contexts/actionTypes';
+import * as apiFunctions from '../../../../apiFunctions';
 import { checkValidity, updateObject } from '../../../../shared/utility';
 //import * as apiFunctions from '../../../../apiFunctions';
 
 const LoginDialog = () => {
   const { t } = useTranslation();
   const { appDispatch } = useContext(AppContext);
+
+  const [loginMessage, setLoginMessage] = useState('');
 
   const [loginForm, setLoginForm] = useState({
     name: {
@@ -73,10 +76,19 @@ const LoginDialog = () => {
     setFormIsValid(formIsValid);
   };
 
-  const loginHandler = () => {
-    console.log('Login');
+  const loginHandler = async () => {
+    if (formIsValid) {
+      const authData = {
+        userName: loginForm.name.value,
+        password: loginForm.password.value,
+      };
+      const response = await apiFunctions.authenticate(authData);
+      console.log(response);
+      if (response.operationResponse.OperationStatus === 'Failed') {
+        setLoginMessage(t('Incorrect name or password'));
+      }
+    }
   };
-
   const formElementsArray = [];
   for (let key in loginForm) {
     formElementsArray.push({
@@ -101,6 +113,7 @@ const LoginDialog = () => {
   return (
     <ModalDialog title={t('Login')}>
       <div className={classes.textInputs}>{formElements}</div>
+      <div className={classes.loginMessage}> {loginMessage}</div>
       <div className={classes.buttonArea}>
         <Button clickHandler={closeDialogHandler}>{t('Cancel')}</Button>
         <Button clickHandler={loginHandler}>{t('Login')}</Button>

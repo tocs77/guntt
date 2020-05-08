@@ -28,7 +28,7 @@ type authBD struct {
 
 type authResponse struct {
 	AuthData          authData          `json:"auth"`
-	OperationResponse OperationResponse `json:"operationResponce"`
+	OperationResponse OperationResponse `json:"operationResponse"`
 }
 
 // Authenticate function
@@ -48,23 +48,27 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 		row := db.QueryRow(sqlStatement, auth.UserName)
 
 		var bdAuthData authBD
-
+		var authD authData
 		err := row.Scan(&bdAuthData.userName, &bdAuthData.pwdHash, &bdAuthData.token)
-		logFatal(err)
+
+		if err != nil {
+			cr := authResponse{authD, res}
+			json.NewEncoder(w).Encode(cr)
+			return
+		}
 
 		fmt.Println("BD auth data", bdAuthData)
 
-		var authD authData
 		if calculateHash(auth.Password) == bdAuthData.pwdHash {
 			res.OperationStatus = "Success"
 
 			authD.UserName = bdAuthData.userName
 			authD.Token = bdAuthData.token
 			authD.DateExpired = bdAuthData.dateExpired
+			cr := authResponse{authD, res}
+			json.NewEncoder(w).Encode(cr)
 		}
 
-		cr := authResponse{authD, res}
-		json.NewEncoder(w).Encode(cr)
 	}
 }
 

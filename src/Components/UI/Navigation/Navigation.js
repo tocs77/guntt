@@ -8,7 +8,6 @@ import Button from '../Button/Button';
 
 import { AppContext } from '../../../contexts/appContext';
 import * as actiontypes from '../../../contexts/actionTypes';
-import * as apiFunctions from '../../../apiFunctions'
 
 const Navigation = (props) => {
   const { appDispatch } = useContext(AppContext);
@@ -26,12 +25,6 @@ const Navigation = (props) => {
 
 
   const authenticateHandler = async() => {
-    // const authData = {
-    //   userName: "Alice",
-    //   password: "11"
-    // }
-    // const response = await apiFunctions.authenticate(authData);
-    // console.log(response)
     appDispatch({
       type: actiontypes.SHOW_LOGIN_DIALOG
     })

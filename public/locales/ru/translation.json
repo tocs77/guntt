@@ -22,5 +22,6 @@
   "November": "Ноябрь",
   "December": "Декабрь",
   "Name": "Имя",
-  "Password": "Пароль"
+  "Password": "Пароль",
+  "Incorrect name or password": "Неправильное имя или пароль"
 }

@@ -22,5 +22,6 @@
   "November": "November",
   "December": "December",
   "Name": "Name",
-  "Password": "Password"
+  "Password": "Password",
+  "Incorrect name or password": "Incorrect name or password"
 }

@@ -8,3 +8,9 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.loginMessage {
+    color: #ff8928;
+    font-size: 1.6rem;
+    font-weight: bold;
+}

@@ -34,6 +34,15 @@ export const updateTask = async (task) => {
 };
 
 
+
+
+/*
+authData format
+authData = {
+      userName: <name>,
+      password: <password>
+    }
+*/
 export const authenticate= async (authData) => {
   let response = await axios.post('/auth', { ...authData });
   return response.data;
