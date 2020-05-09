@@ -3,7 +3,8 @@
 import axios from './axios-instance';
 
 export const getAllTasks = async () => {
-  let response = await axios.get('/tasks');
+  const token = sessionStorage.getItem('authToken');
+  let response = await axios.get('/tasks', { headers: { token: token } });
   const newTasks = response.data.map((task) => {
     const t = {};
     t.task = task.task;
@@ -33,9 +34,6 @@ export const updateTask = async (task) => {
   return response.data;
 };
 
-
-
-
 /*
 authData format
 authData = {
@@ -43,7 +41,7 @@ authData = {
       password: <password>
     }
 */
-export const authenticate= async (authData) => {
+export const authenticate = async (authData) => {
   let response = await axios.post('/auth', { ...authData });
   return response.data;
 };

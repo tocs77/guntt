@@ -26,8 +26,12 @@ type CombinedResponse struct {
 //GetTasks returns http.HandlerFunc to get tasks from database
 func GetTasks(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var name string
+
+		name = getNameByToken(db, r.Header.Get("token"))
+		fmt.Println("Name to read ", name)
 		rows, err :=
-			db.Query("SELECT id, task, startDate, endDate, done FROM tasks")
+			db.Query("SELECT id, task, startDate, endDate, done FROM tasks WHERE owner=$1", name)
 
 		logFatal(err)
 		defer rows.Close()
@@ -48,7 +52,7 @@ func SetOptions(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Received request options")
 		w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET, POST, DELETE, PUT")
-		w.Header().Set("Access-Control-Allow-Headers", "origin, content-type, accept")
+		w.Header().Set("Access-Control-Allow-Headers", "origin, content-type, accept, token")
 		w.Header().Set("Accept", "text/html, application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.WriteHeader(http.StatusOK)
@@ -159,4 +163,17 @@ func parseTime(timeString string) time.Time {
 	}
 	fmt.Println("Error time parsing ", timeString, err)
 	return time.Now()
+}
+
+func getNameByToken(db *sql.DB, token string) string {
+	sqlStatement := "SELECT name FROM users WHERE token=$1"
+
+	row := db.QueryRow(sqlStatement, token)
+
+	var name string
+
+	err := row.Scan(&name)
+	logFatal(err)
+
+	return name
 }
