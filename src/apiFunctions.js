@@ -20,17 +20,23 @@ export const getAllTasks = async () => {
 };
 
 export const deleteTask = async (taskId) => {
-  let response = await axios.delete('/tasks', { data: { id: taskId } });
+  const token = sessionStorage.getItem('authToken');
+  let response = await axios.delete('/tasks', {
+    headers: { token: token },
+    data: { id: taskId },
+  });
   return response.data;
 };
 
 export const addTask = async (task) => {
-  let response = await axios.post('/tasks', { ...task });
+  const token = sessionStorage.getItem('authToken');
+  let response = await axios.post('/tasks', { ...task }, { headers: { token: token } });
   return response.data;
 };
 
 export const updateTask = async (task) => {
-  let response = await axios.put('/tasks', { ...task });
+  const token = sessionStorage.getItem('authToken');
+  let response = await axios.put('/tasks', { ...task }, { headers: { token: token } });
   return response.data;
 };
 

@@ -70,15 +70,24 @@ func SetOptions(db *sql.DB) http.HandlerFunc {
 //DeleteTask returns http.HandlerFunc to delete task from db
 func DeleteTask(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
 		var t models.Task
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
+		res := OperationResponse{"Failed"}
+
+		name, err := getNameByToken(db, r.Header.Get("token"))
+
+		if err != nil {
+			cr := CombinedResponse{t, res}
+			json.NewEncoder(w).Encode(cr)
+			return
+		}
+
 		json.NewDecoder(r.Body).Decode(&t)
 
-		res := OperationResponse{"Failed"}
-		var err error
-		sqlStatement := `DELETE FROM tasks where id=$1`
-		_, err = db.Exec(sqlStatement, t.ID)
+		sqlStatement := `DELETE FROM tasks WHERE id=$1 AND owner=$2`
+		_, err = db.Exec(sqlStatement, t.ID, name)
 		logFatal(err)
 
 		res.OperationStatus = "Success"
@@ -90,14 +99,22 @@ func DeleteTask(db *sql.DB) http.HandlerFunc {
 //AddTask returns http.HandlerFunc to add task to db
 func AddTask(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		res := OperationResponse{"Failed"}
 		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		var task models.Task
+
+		name, err := getNameByToken(db, r.Header.Get("token"))
+
+		if err != nil {
+			cr := CombinedResponse{task, res}
+			json.NewEncoder(w).Encode(cr)
+			return
+		}
 
 		var taskString models.TaskString
 		json.NewDecoder(r.Body).Decode(&taskString)
 
-		var task models.Task
 		task.Task = taskString.Task
 		task.StartDate = utils.ParseTime(taskString.StartDate)
 		task.EndDate = utils.ParseTime(taskString.EndDate)
@@ -105,10 +122,9 @@ func AddTask(db *sql.DB) http.HandlerFunc {
 		task.ID = uuid.New().String()
 		fmt.Println("Added task ", task)
 
-		var err error
-		sqlStatement := `INSERT INTO tasks (id, task, startDate, endDate, done) values($1, $2, $3, $4, $5)`
+		sqlStatement := `INSERT INTO tasks (id, task, startDate, endDate, done, owner) values($1, $2, $3, $4, $5, $6)`
 
-		_, err = db.Exec(sqlStatement, task.ID, task.Task, task.StartDate, task.EndDate, task.Done)
+		_, err = db.Exec(sqlStatement, task.ID, task.Task, task.StartDate, task.EndDate, task.Done, name)
 		logFatal(err)
 		res.OperationStatus = "Success"
 
@@ -123,22 +139,31 @@ func UpdateTask(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Going to update task")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		var taskString models.TaskString
-		json.NewDecoder(r.Body).Decode(&taskString)
 
 		res := OperationResponse{"Failed"}
 
 		newTask := models.Task{}
+
+		name, err := getNameByToken(db, r.Header.Get("token"))
+
+		if err != nil {
+			cr := CombinedResponse{newTask, res}
+			json.NewEncoder(w).Encode(cr)
+			return
+		}
+
+		var taskString models.TaskString
+		json.NewDecoder(r.Body).Decode(&taskString)
+
 		newTask.Task = taskString.Task
 		newTask.ID = taskString.ID
 		newTask.StartDate = utils.ParseTime(taskString.StartDate)
 		newTask.EndDate = utils.ParseTime(taskString.EndDate)
 		newTask.Done = taskString.Done
 
-		var err error
-		sqlStatement := `UPDATE tasks SET task=$1, startDate=$2, endDate=$3, done=$4 where id=$5`
+		sqlStatement := `UPDATE tasks SET task=$1, startDate=$2, endDate=$3, done=$4 WHERE id=$5 AND owner=$6`
 
-		_, err = db.Exec(sqlStatement, newTask.Task, newTask.StartDate, newTask.EndDate, newTask.Done, newTask.ID)
+		_, err = db.Exec(sqlStatement, newTask.Task, newTask.StartDate, newTask.EndDate, newTask.Done, newTask.ID, name)
 		logFatal(err)
 		res.OperationStatus = "Success"
 
