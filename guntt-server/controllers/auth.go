@@ -53,7 +53,7 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 		var authD authData
 		err := row.Scan(&bdAuthData.userName, &bdAuthData.pwdHash, &bdAuthData.token)
 
-		if err != nil {  // name not found in BD returns error
+		if err != nil { // name not found in BD returns error
 			cr := authResponse{authD, res}
 			json.NewEncoder(w).Encode(cr)
 			return
@@ -61,14 +61,20 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 
 		//fmt.Println("BD auth data", bdAuthData)
 
-		if utils.CalculateHash(auth.Password) == bdAuthData.pwdHash {
+		if utils.ComparePasswords(bdAuthData.pwdHash, auth.Password) {
 			res.OperationStatus = "Success"
 
-
+			newToken := utils.GenerateToken()
+			sqlStatement := `UPDATE users SET token=$1, expireDate=$2 WHERE name=$3`
+			_, err = db.Exec(sqlStatement, newToken, time.Now(), auth.UserName)
+			logFatal(err)
 
 			authD.UserName = bdAuthData.userName
-			authD.Token = bdAuthData.token
+			authD.Token = newToken
 			authD.DateExpired = bdAuthData.dateExpired
+		} else {
+			fmt.Println("new hash ", utils.CalculateHash(auth.Password))
+			fmt.Println("bd hash ", bdAuthData.pwdHash)
 		}
 
 		cr := authResponse{authD, res}
@@ -76,4 +82,3 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 
 	}
 }
-
