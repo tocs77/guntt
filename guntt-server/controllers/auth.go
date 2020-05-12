@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"guntt-srv/utils"
 )
 
 type authRequest struct {
@@ -51,16 +53,18 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 		var authD authData
 		err := row.Scan(&bdAuthData.userName, &bdAuthData.pwdHash, &bdAuthData.token)
 
-		if err != nil {
+		if err != nil {  // name not found in BD returns error
 			cr := authResponse{authD, res}
 			json.NewEncoder(w).Encode(cr)
 			return
 		}
 
-		fmt.Println("BD auth data", bdAuthData)
+		//fmt.Println("BD auth data", bdAuthData)
 
-		if calculateHash(auth.Password) == bdAuthData.pwdHash {
+		if utils.CalculateHash(auth.Password) == bdAuthData.pwdHash {
 			res.OperationStatus = "Success"
+
+
 
 			authD.UserName = bdAuthData.userName
 			authD.Token = bdAuthData.token
@@ -73,9 +77,3 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-func calculateHash(pwd string) string {
-	if pwd == "11" {
-		return "777"
-	}
-	return "123"
-}

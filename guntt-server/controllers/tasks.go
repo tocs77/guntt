@@ -3,13 +3,15 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"guntt-srv/models"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/google/uuid"
+
+	"guntt-srv/models"
+	"guntt-srv/utils"
 )
 
 // OperationResponse send to frontend operation status
@@ -26,23 +28,29 @@ type CombinedResponse struct {
 //GetTasks returns http.HandlerFunc to get tasks from database
 func GetTasks(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var name string
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		tasks := []models.Task{}
 
-		name = getNameByToken(db, r.Header.Get("token"))
+		name, err := getNameByToken(db, r.Header.Get("token"))
+
+		if err != nil {
+			json.NewEncoder(w).Encode(tasks)
+			return
+		}
+
 		fmt.Println("Name to read ", name)
 		rows, err :=
 			db.Query("SELECT id, task, startDate, endDate, done FROM tasks WHERE owner=$1", name)
 
-		logFatal(err)
 		defer rows.Close()
-		tasks := []models.Task{}
+
 		for rows.Next() {
 			task := models.Task{}
 			err = rows.Scan(&task.ID, &task.Task, &task.StartDate, &task.EndDate, &task.Done)
 			logFatal(err)
 			tasks = append(tasks, task)
 		}
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+
 		json.NewEncoder(w).Encode(tasks)
 	}
 }
@@ -91,8 +99,8 @@ func AddTask(db *sql.DB) http.HandlerFunc {
 
 		var task models.Task
 		task.Task = taskString.Task
-		task.StartDate = parseTime(taskString.StartDate)
-		task.EndDate = parseTime(taskString.EndDate)
+		task.StartDate = utils.ParseTime(taskString.StartDate)
+		task.EndDate = utils.ParseTime(taskString.EndDate)
 		task.Done = taskString.Done
 		task.ID = uuid.New().String()
 		fmt.Println("Added task ", task)
@@ -123,8 +131,8 @@ func UpdateTask(db *sql.DB) http.HandlerFunc {
 		newTask := models.Task{}
 		newTask.Task = taskString.Task
 		newTask.ID = taskString.ID
-		newTask.StartDate = parseTime(taskString.StartDate)
-		newTask.EndDate = parseTime(taskString.EndDate)
+		newTask.StartDate = utils.ParseTime(taskString.StartDate)
+		newTask.EndDate = utils.ParseTime(taskString.EndDate)
 		newTask.Done = taskString.Done
 
 		var err error
@@ -146,26 +154,7 @@ func logFatal(err error) {
 	}
 }
 
-func parseTime(timeString string) time.Time {
-	layout := "2006-01-02"
-	t, err := time.Parse(layout, timeString)
-
-	if err == nil {
-		return t
-	}
-
-	layout = "2006-01-02T00:00:00.000Z"
-
-	t, err = time.Parse(layout, timeString)
-
-	if err == nil {
-		return t
-	}
-	fmt.Println("Error time parsing ", timeString, err)
-	return time.Now()
-}
-
-func getNameByToken(db *sql.DB, token string) string {
+func getNameByToken(db *sql.DB, token string) (string, error) {
 	sqlStatement := "SELECT name FROM users WHERE token=$1"
 
 	row := db.QueryRow(sqlStatement, token)
@@ -173,7 +162,11 @@ func getNameByToken(db *sql.DB, token string) string {
 	var name string
 
 	err := row.Scan(&name)
-	logFatal(err)
 
-	return name
+	if err != nil {
+		e := errors.New("Not found name")
+		return "", e
+	}
+
+	return name, nil
 }
