@@ -6,6 +6,7 @@ import DayGrid from './DayGrid/DayGrid';
 import classes from './Diagram.module.css';
 
 import { TasksContext } from '../../contexts/taskContext';
+import { AppContext } from '../../contexts/appContext';
 import * as actionTypes from '../../contexts/actionTypes';
 import * as apiFunctions from '../../apiFunctions';
 
@@ -19,6 +20,7 @@ const HEADER_HEIGHT = 50;
 
 const Diagram = () => {
   const { tasks, tasksDispatch } = useContext(TasksContext);
+  const { appState } = useContext(AppContext);
 
   useEffect(() => {
     async function f() {
@@ -26,7 +28,7 @@ const Diagram = () => {
       tasksDispatch({ type: actionTypes.INIT_TASKS, tasks: newTasks });
     }
     f();
-  }, [tasksDispatch]);
+  }, [tasksDispatch, appState.isLogged]);
 
   if (tasks.length === 0) {
     return <div className={classes.message}>No tasks yet</div>;
