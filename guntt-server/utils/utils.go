@@ -40,10 +40,6 @@ func GenerateToken() string {
 // CalculateHash function to calculte hash for password
 func CalculateHash(pwd string) string {
 	return hashAndSalt([]byte(pwd))
-	// if pwd == "11" {
-	// 	return "777"
-	// }
-	// return "123"
 }
 
 // ComparePasswords compares plain password and hash returns true id matches

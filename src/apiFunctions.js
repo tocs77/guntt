@@ -4,7 +4,7 @@ import axios from './axios-instance';
 
 export const getAllTasks = async () => {
   const token = sessionStorage.getItem('authToken');
-  let response = await axios.get('/tasks', { headers: { token: token } });
+  let response = await axios.get('/tasks', { headers: { Authorization: token } });
   const newTasks = response.data.map((task) => {
     const t = {};
     t.task = task.task;
@@ -22,7 +22,7 @@ export const getAllTasks = async () => {
 export const deleteTask = async (taskId) => {
   const token = sessionStorage.getItem('authToken');
   let response = await axios.delete('/tasks', {
-    headers: { token: token },
+    headers: { Authorization: token },
     data: { id: taskId },
   });
   return response.data;
@@ -30,13 +30,13 @@ export const deleteTask = async (taskId) => {
 
 export const addTask = async (task) => {
   const token = sessionStorage.getItem('authToken');
-  let response = await axios.post('/tasks', { ...task }, { headers: { token: token } });
+  let response = await axios.post('/tasks', { ...task }, { headers: { Authorization: token } });
   return response.data;
 };
 
 export const updateTask = async (task) => {
   const token = sessionStorage.getItem('authToken');
-  let response = await axios.put('/tasks', { ...task }, { headers: { token: token } });
+  let response = await axios.put('/tasks', { ...task }, { headers: { Authorization: token } });
   return response.data;
 };
 

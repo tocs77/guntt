@@ -10,6 +10,8 @@ import (
 	"guntt-srv/utils"
 )
 
+const tokenValidTime = time.Second * time.Duration(300)
+
 type authRequest struct {
 	UserName string `json:"userName"`
 	Password string `json:"password"`
@@ -66,15 +68,12 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 
 			newToken := utils.GenerateToken()
 			sqlStatement := `UPDATE users SET token=$1, expireDate=$2 WHERE name=$3`
-			_, err = db.Exec(sqlStatement, newToken, time.Now(), auth.UserName)
+			_, err = db.Exec(sqlStatement, newToken, time.Now().Local().Add(tokenValidTime), auth.UserName)
 			logFatal(err)
 
 			authD.UserName = bdAuthData.userName
 			authD.Token = newToken
 			authD.DateExpired = bdAuthData.dateExpired
-		} else {
-			fmt.Println("new hash ", utils.CalculateHash(auth.Password))
-			fmt.Println("bd hash ", bdAuthData.pwdHash)
 		}
 
 		cr := authResponse{authD, res}

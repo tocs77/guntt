@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 
@@ -31,7 +32,7 @@ func GetTasks(db *sql.DB) http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		tasks := []models.Task{}
 
-		name, err := getNameByToken(db, r.Header.Get("token"))
+		name, err := getNameByToken(db, r.Header.Get("Authorization"))
 
 		if err != nil {
 			json.NewEncoder(w).Encode(tasks)
@@ -60,7 +61,7 @@ func SetOptions(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Received request options")
 		w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET, POST, DELETE, PUT")
-		w.Header().Set("Access-Control-Allow-Headers", "origin, content-type, accept, token")
+		w.Header().Set("Access-Control-Allow-Headers", "origin, content-type, accept, Authorization")
 		w.Header().Set("Accept", "text/html, application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.WriteHeader(http.StatusOK)
@@ -76,7 +77,7 @@ func DeleteTask(db *sql.DB) http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		res := OperationResponse{"Failed"}
 
-		name, err := getNameByToken(db, r.Header.Get("token"))
+		name, err := getNameByToken(db, r.Header.Get("Authorization"))
 
 		if err != nil {
 			cr := CombinedResponse{t, res}
@@ -104,7 +105,7 @@ func AddTask(db *sql.DB) http.HandlerFunc {
 
 		var task models.Task
 
-		name, err := getNameByToken(db, r.Header.Get("token"))
+		name, err := getNameByToken(db, r.Header.Get("Authorization"))
 
 		if err != nil {
 			cr := CombinedResponse{task, res}
@@ -144,7 +145,7 @@ func UpdateTask(db *sql.DB) http.HandlerFunc {
 
 		newTask := models.Task{}
 
-		name, err := getNameByToken(db, r.Header.Get("token"))
+		name, err := getNameByToken(db, r.Header.Get("Authorization"))
 
 		if err != nil {
 			cr := CombinedResponse{newTask, res}
@@ -180,16 +181,22 @@ func logFatal(err error) {
 }
 
 func getNameByToken(db *sql.DB, token string) (string, error) {
-	sqlStatement := "SELECT name FROM users WHERE token=$1"
+	sqlStatement := "SELECT name, expireDate FROM users WHERE token=$1"
 
 	row := db.QueryRow(sqlStatement, token)
 
 	var name string
+	var expTime time.Time
 
-	err := row.Scan(&name)
+	err := row.Scan(&name, &expTime)
 
 	if err != nil {
 		e := errors.New("Not found name")
+		return "", e
+	}
+
+	if time.Now().Local().After(expTime) {
+		e := errors.New("Token expired")
 		return "", e
 	}
 
