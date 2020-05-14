@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -16,11 +15,6 @@ import (
 
 var db *sql.DB
 
-func logFatal(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
 
 func main() {
 
@@ -34,6 +28,9 @@ func main() {
 
 	router.HandleFunc("/auth", controllers.Authenticate(db)).Methods("POST")
 	router.HandleFunc("/auth", controllers.SetOptions(db)).Methods("OPTIONS")
+
+	router.HandleFunc("/signup", controllers.Signup(db)).Methods("POST")
+	router.HandleFunc("/signup", controllers.SetOptions(db)).Methods("OPTIONS")
 
 	fmt.Println("Guntt server started at", time.Now())
 

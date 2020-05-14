@@ -3,7 +3,6 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -44,8 +43,6 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		json.NewDecoder(r.Body).Decode(&auth)
 
-		fmt.Println("Auth post", auth)
-
 		res := OperationResponse{"Failed"}
 
 		sqlStatement := "SELECT name, pwdHash, token FROM users WHERE name=$1"
@@ -61,8 +58,6 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		//fmt.Println("BD auth data", bdAuthData)
-
 		if utils.ComparePasswords(bdAuthData.pwdHash, auth.Password) {
 			res.OperationStatus = "Success"
 
@@ -74,6 +69,52 @@ func Authenticate(db *sql.DB) http.HandlerFunc {
 			authD.UserName = bdAuthData.userName
 			authD.Token = newToken
 			authD.DateExpired = bdAuthData.dateExpired
+		}
+
+		cr := authResponse{authD, res}
+		json.NewEncoder(w).Encode(cr)
+
+	}
+}
+
+
+// Signup function returns handler to signup
+func Signup(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var auth authRequest
+
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		json.NewDecoder(r.Body).Decode(&auth)
+
+		res := OperationResponse{"Failed"}
+
+		sqlStatement := "SELECT name FROM users WHERE name=$1"
+		row := db.QueryRow(sqlStatement, auth.UserName)
+
+		var authD authData
+
+		var checkedName string
+		err := row.Scan(&checkedName)
+
+		if err == nil { // name found in BD returns error name found
+			cr := authResponse{authD, res}
+			json.NewEncoder(w).Encode(cr)
+			return
+		} 
+
+
+		pwdHash := utils.CalculateHash(auth.Password)
+		newToken := utils.GenerateToken()
+		expireDate :=time.Now().Local().Add(tokenValidTime)
+
+		sqlStatement = `INSERT INTO users (name, pwdHash, token, expireDate) values($1, $2, $3, $4)`
+
+		_, err = db.Exec(sqlStatement, auth.UserName, pwdHash , newToken ,expireDate)
+		if err == nil {
+		authD.UserName = auth.UserName
+			authD.Token = newToken
+			authD.DateExpired = expireDate
+			res.OperationStatus = "Success"	
 		}
 
 		cr := authResponse{authD, res}

@@ -27,5 +27,7 @@
   "Repeat Password": "Repeat Password",
   "Incorrect name or password": "Incorrect name or password",
   "Entered different passwords": "Entered different passwords",
-  "SignUp": "SignUp"
+  "SignUp": "SignUp",
+  "No tasks yet": "No tasks yet",
+  "This name exists already": "This name exists already"
 }

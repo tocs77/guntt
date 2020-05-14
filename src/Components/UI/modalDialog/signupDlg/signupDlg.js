@@ -91,10 +91,9 @@ const SignUpDialog = () => {
 
   const signUpHandler = async () => {
     if (formIsValid) {
-
-      if (signUpForm.password1.value !==signUpForm.password2.value) {
+      if (signUpForm.password1.value !== signUpForm.password2.value) {
         setSignUpMessage(t('Entered different passwords'));
-        return
+        return;
       }
       const authData = {
         userName: signUpForm.name.value,
@@ -103,10 +102,9 @@ const SignUpDialog = () => {
       const response = await apiFunctions.signUp(authData);
 
       if (response.operationResponse.OperationStatus === 'Failed') {
-        setSignUpMessage(t('Incorrect name or password'));
+        setSignUpMessage(t('This name exists already'));
         return;
       }
-
       if (response.operationResponse.OperationStatus === 'Success') {
         var token = response.auth.token;
         sessionStorage.setItem('authToken', token);

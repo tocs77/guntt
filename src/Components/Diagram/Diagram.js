@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Task from './Task/Task';
 import DayGrid from './DayGrid/DayGrid';
@@ -21,6 +22,7 @@ const HEADER_HEIGHT = 50;
 const Diagram = () => {
   const { tasks, tasksDispatch } = useContext(TasksContext);
   const { appState } = useContext(AppContext);
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function f() {
@@ -31,7 +33,7 @@ const Diagram = () => {
   }, [tasksDispatch, appState.isLogged]);
 
   if (tasks.length === 0) {
-    return <div className={classes.message}>No tasks yet</div>;
+    return <div className={classes.message}>{t("No tasks yet")}</div>;
   }
 
   let firstDate = tasks[0].startDate;
