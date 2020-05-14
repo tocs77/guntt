@@ -1,19 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 
-import classes from "./modalDialog.module.css";
+import classes from './modalDialog.module.css';
 
-const modalDialog = (props) => {
+const ModalDialog = (props) => {
+  const [cssClass, setCssClass] = useState(classes.modal_content);
+
+  useEffect(() => {
+    setCssClass(classes.modal_content_visible);
+    console.log('Use effect worked', cssClass);
+  }, [cssClass]);
+
   return (
     <div className={classes.modal}>
-      <div className={classes.modal_content}>
+      <div className={cssClass}>
         <div className={classes.title}>{props.title}</div>
-        <div>
-            {props.children}
-        </div>
-        </div>
+        <div>{props.children}</div>
       </div>
-
+    </div>
   );
 };
 
-export default modalDialog;
+export default ModalDialog;
