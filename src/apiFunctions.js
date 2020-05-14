@@ -51,3 +51,8 @@ export const authenticate = async (authData) => {
   let response = await axios.post('/auth', { ...authData });
   return response.data;
 };
+
+export const signUp = async (authData) => {
+  let response = await axios.post('/signup', { ...authData });
+  return response.data;
+};

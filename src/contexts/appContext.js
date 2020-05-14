@@ -6,6 +6,7 @@ import { updateObject } from '../shared/utility';
 export const initialState = {
   showAddModal: false,
   showLoginModal: false,
+  showSigninModal: false,
   isLogged: false,
   editModal: {
     show: false,
@@ -77,6 +78,12 @@ export const appReducer = (state = initialState, action) => {
     case actionTypes.APP_USER_EXIT:
       sessionStorage.removeItem('authToken');
       return updateObject(state, { isLogged: false });
+
+    case actionTypes.SHOW_SIGNUP_DIALOG:
+      return updateObject(state, { showSigninModal: true });
+
+    case actionTypes.HIDE_SIGNUP_DIALOG:
+      return updateObject(state, { showSigninModal: false });
 
     default:
       return state;

@@ -2,7 +2,7 @@
   "Task": "Задача",
   "UseFilter": "Фильтр",
   "AddTask": "Добавить задачу",
-  "Login": "Войти",
+  "Login": "Вход",
   "Logout": "Выйти",
   "StartDate": "Начальная дата",
   "EndDate": "Конечная дата",
@@ -24,5 +24,8 @@
   "December": "Декабрь",
   "Name": "Имя",
   "Password": "Пароль",
-  "Incorrect name or password": "Неправильное имя или пароль"
+  "Repeat Password": "Повторите пароль",
+  "Incorrect name or password": "Неправильное имя или пароль",
+  "Entered different passwords": "Введены разные пароли",
+  "SignUp": "Регистрация"
 }

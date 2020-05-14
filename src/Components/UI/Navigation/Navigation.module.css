@@ -8,6 +8,8 @@
 
 .button_block {
   margin: 0.5rem;
+  display: flex;
+  width: min-content;
 }
 
 .language_button_block {

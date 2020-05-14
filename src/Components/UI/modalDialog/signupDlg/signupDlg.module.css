@@ -1,0 +1,16 @@
+.textInputs {
+    width: 100%;
+}
+
+
+.buttonArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.signUpMessage {
+    color: #ff8928;
+    font-size: 1.6rem;
+    font-weight: bold;
+}

@@ -24,5 +24,8 @@
   "December": "December",
   "Name": "Name",
   "Password": "Password",
-  "Incorrect name or password": "Incorrect name or password"
+  "Repeat Password": "Repeat Password",
+  "Incorrect name or password": "Incorrect name or password",
+  "Entered different passwords": "Entered different passwords",
+  "SignUp": "SignUp"
 }

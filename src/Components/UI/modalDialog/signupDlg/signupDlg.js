@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '../../Button/Button';
-import classes from './loginDlg.module.css';
+import classes from './signupDlg.module.css';
 import ModalDialog from '../modalDialog';
 
 import Input from '../../Input/Input';
@@ -12,13 +12,13 @@ import * as actionTypes from '../../../../contexts/actionTypes';
 import * as apiFunctions from '../../../../apiFunctions';
 import { checkValidity, updateObject } from '../../../../shared/utility';
 
-const LoginDialog = () => {
+const SignUpDialog = () => {
   const { t } = useTranslation();
   const { appDispatch } = useContext(AppContext);
 
-  const [loginMessage, setLoginMessage] = useState('');
+  const [signUpMessage, setSignUpMessage] = useState('');
 
-  const [loginForm, setLoginForm] = useState({
+  const [signUpForm, setSignUpForm] = useState({
     name: {
       elementType: 'input',
       elementConfig: {
@@ -33,7 +33,7 @@ const LoginDialog = () => {
       valid: false,
       touched: false,
     },
-    password: {
+    password1: {
       elementType: 'input',
       elementConfig: {
         type: 'password',
@@ -47,23 +47,37 @@ const LoginDialog = () => {
       valid: false,
       touched: false,
     },
+    password2: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'password',
+        placeholder: t('Password'),
+      },
+      label: t('Repeat Password'),
+      value: '',
+      validation: {
+        required: true,
+      },
+      valid: false,
+      touched: false,
+    },
   });
 
   const [formIsValid, setFormIsValid] = useState(false);
 
   const closeDialogHandler = () => {
     appDispatch({
-      type: actionTypes.HIDE_LOGIN_DIALOG,
+      type: actionTypes.HIDE_SIGNUP_DIALOG,
     });
   };
 
   const inputChangedHandler = (event, inputIdentifier) => {
-    const updatedFormElement = updateObject(loginForm[inputIdentifier], {
+    const updatedFormElement = updateObject(signUpForm[inputIdentifier], {
       value: event.target.value,
-      valid: checkValidity(event.target.value, loginForm[inputIdentifier].validation),
+      valid: checkValidity(event.target.value, signUpForm[inputIdentifier].validation),
       touched: true,
     });
-    const updatedOrderForm = updateObject(loginForm, {
+    const updatedOrderForm = updateObject(signUpForm, {
       [inputIdentifier]: updatedFormElement,
     });
 
@@ -71,20 +85,25 @@ const LoginDialog = () => {
     for (let inputIdentifier in updatedOrderForm) {
       formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
     }
-    setLoginForm(updatedOrderForm);
+    setSignUpForm(updatedOrderForm);
     setFormIsValid(formIsValid);
   };
 
-  const loginHandler = async () => {
+  const signUpHandler = async () => {
     if (formIsValid) {
+
+      if (signUpForm.password1.value !==signUpForm.password2.value) {
+        setSignUpMessage(t('Entered different passwords'));
+        return
+      }
       const authData = {
-        userName: loginForm.name.value,
-        password: loginForm.password.value,
+        userName: signUpForm.name.value,
+        password: signUpForm.password1.value,
       };
-      const response = await apiFunctions.authenticate(authData);
+      const response = await apiFunctions.signUp(authData);
 
       if (response.operationResponse.OperationStatus === 'Failed') {
-        setLoginMessage(t('Incorrect name or password'));
+        setSignUpMessage(t('Incorrect name or password'));
         return;
       }
 
@@ -95,26 +114,26 @@ const LoginDialog = () => {
           type: actionTypes.APP_USER_ENTER,
         });
         appDispatch({
-          type: actionTypes.HIDE_LOGIN_DIALOG,
+          type: actionTypes.HIDE_SIGNUP_DIALOG,
         });
       }
     }
   };
 
-  const signUpHandler = () => {
+  const loginHandler = () => {
     appDispatch({
-      type: actionTypes.HIDE_LOGIN_DIALOG,
+      type: actionTypes.HIDE_SIGNUP_DIALOG,
     });
     appDispatch({
-      type: actionTypes.SHOW_SIGNUP_DIALOG,
+      type: actionTypes.SHOW_LOGIN_DIALOG,
     });
   };
 
   const formElementsArray = [];
-  for (let key in loginForm) {
+  for (let key in signUpForm) {
     formElementsArray.push({
       id: key,
-      config: loginForm[key],
+      config: signUpForm[key],
     });
   }
   const formElements = formElementsArray.map((formElement) => (
@@ -132,16 +151,16 @@ const LoginDialog = () => {
   ));
 
   return (
-    <ModalDialog title={t('Login')}>
+    <ModalDialog title={t('SignUp')}>
       <div className={classes.textInputs}>{formElements}</div>
-      <div className={classes.loginMessage}> {loginMessage}</div>
+      <div className={classes.signUpMessage}> {signUpMessage}</div>
       <div className={classes.buttonArea}>
-        <Button clickHandler={signUpHandler}>{t('SignUp')}</Button>
-        <Button clickHandler={closeDialogHandler}>{t('Cancel')}</Button>
         <Button clickHandler={loginHandler}>{t('Login')}</Button>
+        <Button clickHandler={closeDialogHandler}>{t('Cancel')}</Button>
+        <Button clickHandler={signUpHandler}>{t('SignUp')}</Button>
       </div>
     </ModalDialog>
   );
 };
 
-export default LoginDialog;
+export default SignUpDialog;

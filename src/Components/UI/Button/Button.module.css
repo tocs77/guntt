@@ -1,7 +1,7 @@
 .button {
     height: 80%;
     max-width: 20%;
-    min-width: 10vw;
+    min-width: min-content;
     border-radius: 10%;
     transition: all 0.2s;
     background: linear-gradient(45deg, #e8a87c, #d86f26, #CE5B78);
@@ -25,9 +25,10 @@
 .button_text {
     letter-spacing: 0.4rem;
     text-transform: uppercase;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     text-align: center;
     font-weight: 600;
+    overflow-wrap: break-word;
 }
 
 .button_small {
