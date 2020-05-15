@@ -46,8 +46,11 @@ const Navigation = (props) => {
         </Button>
       </div>
       <div className={classes.button_block}>
-        <Button>{t('UseFilter')}</Button>
-        <Button clickHandler={addTaskHandler}>{t('AddTask')}</Button>
+        {appState.isLogged ? <Button>{t('UseFilter')}</Button> : null}
+        {appState.isLogged ? (
+          <Button clickHandler={addTaskHandler}>{t('AddTask')}</Button>
+        ) : null}
+
         {!appState.isLogged ? (
           <Button clickHandler={authenticateHandler}>{t('Login')}</Button>
         ) : (
