@@ -138,7 +138,6 @@ func AddTask(db *sql.DB) http.HandlerFunc {
 //UpdateTask returns http.HandlerFunc to update task in db
 func UpdateTask(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Going to update task")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 
 		res := OperationResponse{"Failed"}

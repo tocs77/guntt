@@ -25,12 +25,8 @@ func main() {
 		log.Print("No .env file found")
 	}
 
-	staticDir, exists := os.LookupEnv("STATIC_DIR")
-
 	db = driver.ConnectDB()
 	router := mux.NewRouter()
-
-	//fs := http.FileServer(http.Dir("d:\\projects\\guntt\\build"))
 
 	router.HandleFunc("/tasks", controllers.GetTasks(db)).Methods("GET")
 	router.HandleFunc("/tasks", controllers.SetOptions(db)).Methods("OPTIONS")
@@ -39,6 +35,7 @@ func main() {
 	router.HandleFunc("/tasks", controllers.UpdateTask(db)).Methods("PUT")
 
 	router.HandleFunc("/auth", controllers.Authenticate(db)).Methods("POST")
+	router.HandleFunc("/auth", controllers.CheckToken(db)).Methods("GET")
 	router.HandleFunc("/auth", controllers.SetOptions(db)).Methods("OPTIONS")
 
 	router.HandleFunc("/signup", controllers.Signup(db)).Methods("POST")

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
@@ -7,6 +7,7 @@ import Logo from '../Logo/Logo';
 import Button from '../Button/Button';
 
 import { AppContext } from '../../../contexts/appContext';
+import * as apiFunctions from '../../../apiFunctions';
 import * as actiontypes from '../../../contexts/actionTypes';
 
 const Navigation = (props) => {
@@ -16,6 +17,22 @@ const Navigation = (props) => {
   const changeLanguage = (code) => {
     i18n.changeLanguage(code);
   };
+
+  useEffect(() => {
+    async function f() {
+      const response = await apiFunctions.checkToken();
+      if (response.operationResponse.OperationStatus === 'Success') {
+        appDispatch({
+          type: actiontypes.SET_USER_NAME,
+          userName: response.auth.userName,
+        });
+        appDispatch({
+          type: actiontypes.APP_USER_ENTER,
+        });
+      }
+    }
+    f();
+  }, [appDispatch]);
 
   const addTaskHandler = () => {
     appDispatch({

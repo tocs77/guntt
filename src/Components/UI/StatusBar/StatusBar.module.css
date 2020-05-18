@@ -1,3 +1,18 @@
 .statusBar {
-    background-color: blueviolet;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #7e7e7e, #585858);
+  padding: .5rem;
+  margin: .3rem;
+}
+
+.loginMessage {
+  font-size: 1.5rem;
+  color: mediumblue
+}
+
+.author {
+  font-size: 1.5rem;
+  color: antiquewhite;
 }

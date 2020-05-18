@@ -112,6 +112,10 @@ const SignUpDialog = () => {
           type: actionTypes.APP_USER_ENTER,
         });
         appDispatch({
+          type: actionTypes.SET_USER_NAME,
+          userName: response.auth.userName,
+        });
+        appDispatch({
           type: actionTypes.HIDE_SIGNUP_DIALOG,
         });
       }

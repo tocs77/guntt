@@ -30,7 +30,11 @@ export const deleteTask = async (taskId) => {
 
 export const addTask = async (task) => {
   const token = sessionStorage.getItem('authToken');
-  let response = await axios.post('/tasks', { ...task }, { headers: { Authorization: token } });
+  let response = await axios.post(
+    '/tasks',
+    { ...task },
+    { headers: { Authorization: token } }
+  );
   return response.data;
 };
 
@@ -54,5 +58,11 @@ export const authenticate = async (authData) => {
 
 export const signUp = async (authData) => {
   let response = await axios.post('/signup', { ...authData });
+  return response.data;
+};
+
+export const checkToken = async () => {
+  const token = sessionStorage.getItem('authToken');
+  let response = await axios.get('/auth', { headers: { Authorization: token } });
   return response.data;
 };

@@ -8,6 +8,7 @@ export const initialState = {
   showLoginModal: false,
   showSigninModal: false,
   isLogged: false,
+  userName: '',
   editModal: {
     show: false,
     taskID: null,
@@ -84,6 +85,9 @@ export const appReducer = (state = initialState, action) => {
 
     case actionTypes.HIDE_SIGNUP_DIALOG:
       return updateObject(state, { showSigninModal: false });
+
+    case actionTypes.SET_USER_NAME:
+      return updateObject(state, { userName: action.userName });
 
     default:
       return state;

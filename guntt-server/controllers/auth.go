@@ -122,3 +122,31 @@ func Signup(db *sql.DB) http.HandlerFunc {
 
 	}
 }
+
+
+// CheckToken function to chesk if token valid
+func CheckToken(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		res := OperationResponse{"Failed"}
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		var authD authData
+
+		name, err := getNameByToken(db, r.Header.Get("Authorization"))
+		if err!= nil {
+			cr := authResponse{authD, res}
+			json.NewEncoder(w).Encode(cr)
+			return
+		}
+
+		sqlStatement := "SELECT name, token, expireDate FROM users WHERE name=$1"
+		row := db.QueryRow(sqlStatement, name)
+		err = row.Scan(&authD.UserName, &authD.Token, &authD.DateExpired)
+
+		if err == nil {
+			res.OperationStatus = "Success"	
+		} 
+		cr := authResponse{authD, res}
+			json.NewEncoder(w).Encode(cr)
+	}
+}

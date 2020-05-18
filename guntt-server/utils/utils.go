@@ -42,7 +42,7 @@ func CalculateHash(pwd string) string {
 	return hashAndSalt([]byte(pwd))
 }
 
-// ComparePasswords compares plain password and hash returns true id matches
+// ComparePasswords compares plain password and hash returns true if matches
 func ComparePasswords(hashedPwd string, plainPwd string) bool {
 
 	byteHash := []byte(hashedPwd)
