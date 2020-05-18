@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -39,7 +38,6 @@ func GetTasks(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		fmt.Println("Name to read ", name)
 		rows, err :=
 			db.Query("SELECT id, task, startDate, endDate, done FROM tasks WHERE owner=$1", name)
 
@@ -59,7 +57,6 @@ func GetTasks(db *sql.DB) http.HandlerFunc {
 //SetOptions returns http.HandlerFunc to set allowed request options
 func SetOptions(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Received request options")
 		w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET, POST, DELETE, PUT")
 		w.Header().Set("Access-Control-Allow-Headers", "origin, content-type, accept, Authorization")
 		w.Header().Set("Accept", "text/html, application/json")
@@ -121,7 +118,6 @@ func AddTask(db *sql.DB) http.HandlerFunc {
 		task.EndDate = utils.ParseTime(taskString.EndDate)
 		task.Done = taskString.Done
 		task.ID = uuid.New().String()
-		fmt.Println("Added task ", task)
 
 		sqlStatement := `INSERT INTO tasks (id, task, startDate, endDate, done, owner) values($1, $2, $3, $4, $5, $6)`
 

@@ -29,5 +29,7 @@
   "Entered different passwords": "Введены разные пароли",
   "SignUp": "Регистрация",
   "No tasks yet": "Задач пока нет",
-  "This name exists already": "Это имя уже существует"
+  "This name exists already": "Это имя уже существует",
+  "Hello": "Привет ",
+  "Please login or sign in": "Пожалуйста войдите или зарегестрируйтесь"
 }

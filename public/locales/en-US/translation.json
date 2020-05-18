@@ -29,5 +29,7 @@
   "Entered different passwords": "Entered different passwords",
   "SignUp": "SignUp",
   "No tasks yet": "No tasks yet",
-  "This name exists already": "This name exists already"
+  "This name exists already": "This name exists already",
+  "Hello": "Hello ",
+  "Please login or sign in": "Please login or sign in"
 }
