@@ -2,10 +2,11 @@ package logger
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/felixge/httpsnoop"
@@ -28,7 +29,7 @@ type HTTPReqInfo struct {
 }
 
 //LogRequestHandler middleware function to log request data
-func LogRequestHandler(h http.HandlerFunc) http.HandlerFunc {
+func LogRequestHandler(h http.HandlerFunc, logChannel chan string) http.HandlerFunc {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		ri := &HTTPReqInfo{
 			method:    r.Method,
@@ -46,7 +47,7 @@ func LogRequestHandler(h http.HandlerFunc) http.HandlerFunc {
 		ri.code = m.Code
 		ri.size = m.Written
 		ri.duration = m.Duration
-		logHTTPReq(ri)
+		logHTTPReq(ri, logChannel)
 	}
 	return fn
 }
@@ -82,26 +83,33 @@ func requestGetRemoteAddress(r *http.Request) string {
 	return hdrRealIP
 }
 
-var (
-	muLogHTTP sync.Mutex
-)
+func logHTTPReq(ri *HTTPReqInfo, logChannel chan string) {
 
-func logHTTPReq(ri *HTTPReqInfo) {
-	//var rec siser.Record
-	//rec.Name = "httplog"
-	fmt.Println("method", ri.method)
-	fmt.Println("uri", ri.uri)
-	if ri.referer != "" {
-		fmt.Println("referer", ri.referer)
+	msg := fmt.Sprintf(`method %s
+	uri %s
+	referer %s
+	ipaddr %s
+	code %s
+	size %s
+	duration %s
+	ua %s`, ri.method, ri.uri, ri.referer, ri.ipaddr,
+		strconv.Itoa(ri.code), strconv.FormatInt(ri.size, 10),
+		strconv.FormatInt(int64(ri.duration/time.Millisecond), 10), ri.userAgent)
+
+	logChannel <- msg
+}
+
+//Logger function to writa all input data to log
+func Logger(input chan string) {
+	f, err := os.OpenFile("guntt.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
 	}
-	fmt.Println("ipaddr", ri.ipaddr)
-	fmt.Println("code", strconv.Itoa(ri.code))
-	fmt.Println("size", strconv.FormatInt(ri.size, 10))
-	durMs := ri.duration / time.Millisecond
-	fmt.Println("duration", strconv.FormatInt(int64(durMs), 10))
-	fmt.Println("ua", ri.userAgent)
+	defer f.Close()
 
-	muLogHTTP.Lock()
-	defer muLogHTTP.Unlock()
-	//_, _ = httpLogSiser.WriteRecord(&rec)
+	log.SetOutput(f)
+	for entry := range input {
+		log.Printf("\n%s", entry)
+		log.Print("\n--------------------------------\n")
+	}
 }

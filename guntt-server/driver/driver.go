@@ -2,26 +2,34 @@ package driver
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
 var db *sql.DB
 
-func logFatal(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+var dbPath string = "./gunnt.db"
 
 // ConnectDB connects to database
-func ConnectDB() *sql.DB {
+func ConnectDB(logChannel chan string) *sql.DB {
 	var err error
-	db, err = sql.Open("sqlite3", "./gunnt.db")
-	logFatal(err)
+	logChannel <- fmt.Sprintf("Try to open database at %s", dbPath)
+	db, err = sql.Open("sqlite3", dbPath)
+	if err != nil {
+		msg := fmt.Sprintf("Error opening database %s", err)
+		logChannel <- msg
+		log.Fatal(err)
+	}
 
 	err = db.Ping()
 
-	logFatal(err)
+	if err != nil {
+		msg := fmt.Sprintf("Error ping database %s", err)
+		logChannel <- msg
+		log.Fatal(err)
+	}
+
+	logChannel <- "Database opened successfully"
 
 	return db
 }
