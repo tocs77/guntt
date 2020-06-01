@@ -122,9 +122,11 @@ func AddTask(db *sql.DB) http.HandlerFunc {
 		sqlStatement := `INSERT INTO tasks (id, task, startDate, endDate, done, owner) values($1, $2, $3, $4, $5, $6)`
 
 		_, err = db.Exec(sqlStatement, task.ID, task.Task, task.StartDate, task.EndDate, task.Done, name)
-		logFatal(err)
-		res.OperationStatus = "Success"
 
+		res.OperationStatus = "Success"
+		if err!= nil {
+			res.OperationStatus = "Failed"
+		}
 		cr := CombinedResponse{task, res}
 		json.NewEncoder(w).Encode(cr)
 

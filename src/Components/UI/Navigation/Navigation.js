@@ -20,8 +20,8 @@ const Navigation = (props) => {
 
   useEffect(() => {
     async function f() {
-      const response = await apiFunctions.checkToken();
-      if (response.operationResponse.OperationStatus === 'Success') {
+      const response = await apiFunctions.checkToken();               //*Check if saved token still valid and 
+      if (response.operationResponse.OperationStatus === 'Success') { //*authentication won`t need
         appDispatch({
           type: actiontypes.SET_USER_NAME,
           userName: response.auth.userName,

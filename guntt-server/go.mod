@@ -3,6 +3,7 @@ module guntt-srv
 go 1.14
 
 require (
+	github.com/felixge/httpsnoop v1.0.1
 	github.com/google/uuid v1.1.1 // direct
 	github.com/gorilla/mux v1.7.4 // direct
 	github.com/joho/godotenv v1.3.0

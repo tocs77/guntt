@@ -14,6 +14,7 @@ import (
 
 	"guntt-srv/controllers"
 	"guntt-srv/driver"
+	"guntt-srv/logger"
 )
 
 var db *sql.DB
@@ -28,18 +29,18 @@ func main() {
 	db = driver.ConnectDB()
 	router := mux.NewRouter()
 
-	router.HandleFunc("/tasks", controllers.GetTasks(db)).Methods("GET")
-	router.HandleFunc("/tasks", controllers.SetOptions(db)).Methods("OPTIONS")
-	router.HandleFunc("/tasks", controllers.DeleteTask(db)).Methods("DELETE")
-	router.HandleFunc("/tasks", controllers.AddTask(db)).Methods("POST")
-	router.HandleFunc("/tasks", controllers.UpdateTask(db)).Methods("PUT")
+	router.HandleFunc("/tasks", logger.LogRequestHandler(controllers.GetTasks(db))).Methods("GET")
+	router.HandleFunc("/tasks", logger.LogRequestHandler(controllers.SetOptions(db))).Methods("OPTIONS")
+	router.HandleFunc("/tasks", logger.LogRequestHandler(controllers.DeleteTask(db))).Methods("DELETE")
+	router.HandleFunc("/tasks", logger.LogRequestHandler(controllers.AddTask(db))).Methods("POST")
+	router.HandleFunc("/tasks", logger.LogRequestHandler(controllers.UpdateTask(db))).Methods("PUT")
 
-	router.HandleFunc("/auth", controllers.Authenticate(db)).Methods("POST")
-	router.HandleFunc("/auth", controllers.CheckToken(db)).Methods("GET")
-	router.HandleFunc("/auth", controllers.SetOptions(db)).Methods("OPTIONS")
+	router.HandleFunc("/auth", logger.LogRequestHandler(controllers.Authenticate(db))).Methods("POST")
+	router.HandleFunc("/auth", logger.LogRequestHandler(controllers.CheckToken(db))).Methods("GET")
+	router.HandleFunc("/auth", logger.LogRequestHandler(controllers.SetOptions(db))).Methods("OPTIONS")
 
-	router.HandleFunc("/signup", controllers.Signup(db)).Methods("POST")
-	router.HandleFunc("/signup", controllers.SetOptions(db)).Methods("OPTIONS")
+	router.HandleFunc("/signup", logger.LogRequestHandler(controllers.Signup(db))).Methods("POST")
+	router.HandleFunc("/signup", logger.LogRequestHandler(controllers.SetOptions(db))).Methods("OPTIONS")
 
 	staticDir, exists := os.LookupEnv("STATIC_DIR")
 	if !exists {
