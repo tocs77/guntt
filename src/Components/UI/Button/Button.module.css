@@ -25,10 +25,11 @@
 .button_text {
     letter-spacing: 0.4rem;
     text-transform: uppercase;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     text-align: center;
     font-weight: 600;
     overflow-wrap: break-word;
+    padding: 0.3rem
 }
 
 .button_small {

@@ -42,7 +42,7 @@ const Navigation = (props) => {
 
   const authenticateHandler = () => {
     appDispatch({
-      type: actiontypes.SHOW_LOGIN_DIALOG,
+      type: actiontypes.SHOW_SIGNUP_DIALOG,
     });
   };
 
@@ -63,7 +63,6 @@ const Navigation = (props) => {
         </Button>
       </div>
       <div className={classes.button_block}>
-        {appState.isLogged ? <Button>{t('UseFilter')}</Button> : null}
         {appState.isLogged ? (
           <Button clickHandler={addTaskHandler}>{t('AddTask')}</Button>
         ) : null}
