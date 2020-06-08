@@ -1,4 +1,4 @@
-// This file contains finction to srver api calls
+// This file contains functions for server api calls
 
 import axios from './axios-instance';
 

@@ -8,7 +8,7 @@ import Button from '../Button/Button';
 
 import { AppContext } from '../../../contexts/appContext';
 import * as apiFunctions from '../../../apiFunctions';
-import * as actiontypes from '../../../contexts/actionTypes';
+import * as actionTypes from '../../../contexts/actionTypes';
 
 const Navigation = (props) => {
   const { appState, appDispatch } = useContext(AppContext);
@@ -24,11 +24,11 @@ const Navigation = (props) => {
       if (response.operationResponse.OperationStatus === 'Success') {
         //*authentication won`t need
         appDispatch({
-          type: actiontypes.SET_USER_NAME,
+          type: actionTypes.SET_USER_NAME,
           userName: response.auth.userName,
         });
         appDispatch({
-          type: actiontypes.APP_USER_ENTER,
+          type: actionTypes.APP_USER_ENTER,
         });
       }
     }
@@ -37,23 +37,36 @@ const Navigation = (props) => {
 
   const addTaskHandler = () => {
     appDispatch({
-      type: actiontypes.SHOW_ADD_TASK_DIALOG,
+      type: actionTypes.SHOW_ADD_TASK_DIALOG,
     });
   };
 
   const authenticateHandler = () => {
     appDispatch({
-      type: actiontypes.SHOW_SIGNUP_DIALOG,
+      type: actionTypes.SHOW_SIGNUP_DIALOG,
     });
   };
 
   const logoutHandler = () => {
     appDispatch({
-      type: actiontypes.APP_USER_EXIT,
+      type: actionTypes.APP_USER_EXIT,
     });
   };
 
-  const demoHandler = () => {};
+  const demoHandler = async () => {
+    var response = await apiFunctions.demoMode();
+    if (response.operationResponse.OperationStatus === 'Success') {
+      var token = response.auth.token;
+      sessionStorage.setItem('authToken', token);
+      appDispatch({
+        type: actionTypes.APP_USER_ENTER,
+      });
+      appDispatch({
+        type: actionTypes.SET_USER_NAME,
+        userName: response.auth.userName,
+      });
+    }
+  };
 
   return (
     <nav className={classes.navigation} id={props.id}>

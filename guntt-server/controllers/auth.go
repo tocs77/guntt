@@ -9,7 +9,7 @@ import (
 	"guntt-srv/utils"
 )
 
-const tokenValidTime = time.Second * time.Duration(300)
+const tokenValidTime = time.Second * time.Duration(3600) // 1 hour token to expire
 
 type authRequest struct {
 	UserName string `json:"userName"`
