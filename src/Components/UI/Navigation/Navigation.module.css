@@ -10,9 +10,13 @@
   margin: 0.5rem;
   display: flex;
   width: min-content;
+  flex: 2 1 40vw;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .language_button_block {
   margin: 0.5rem;
   height: 50%;
+  flex: 2 1 20vw;
 }

@@ -3,6 +3,7 @@
   align-content: center;
   justify-content: flex-end;
   margin-bottom: .3rem;
+  flex-wrap: wrap;
 }
 
 .label {
@@ -20,6 +21,7 @@
     display: flex;
     justify-content: flex-end;
     align-content: center;
+    flex-wrap: wrap;
 }
 
 @media only screen and (max-width: 900px) {
@@ -29,6 +31,7 @@
         align-items: center;
         border-bottom: 1px solid black;
         margin-bottom: .5rem;
+        flex-grow: 1;
     }
     .label {
         flex-grow: 2;
@@ -37,7 +40,7 @@
 
     .buttonContainer {
         margin: .4rem;
-        justify-content: space-between;
-        flex-grow: 3;
+        justify-content: stretch;
+        flex-grow: 1;
     }
 }

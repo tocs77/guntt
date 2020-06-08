@@ -16,3 +16,13 @@
     font: italic 1.2rem sans-serif;
   }
 }
+
+@media only screen and (max-width: 650px) {
+  .small {
+    font: italic 0.7rem sans-serif;
+  }
+
+  .medium {
+    font: italic 1rem sans-serif;
+  }
+}

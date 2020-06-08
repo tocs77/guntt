@@ -63,21 +63,22 @@ const SideMenu = () => {
 
   const tasksElements = tasks.map((task) => {
     return (
-      <TaskPanel
-        task={task}
-        key={task.id}
-        mouseEnter={() => mouseEnterPanelHandler(task.id)}
-        mouseLeave={() => mouseLeavePanelHandler(task.id)}
-        deleteTask={() => deleteTaskHandler(task.id)}
-        doneTask={() => doneTaskHandler(task.id)}
-      ></TaskPanel>
+      <li key={task.id}>
+        <TaskPanel
+          task={task}
+          mouseEnter={() => mouseEnterPanelHandler(task.id)}
+          mouseLeave={() => mouseLeavePanelHandler(task.id)}
+          deleteTask={() => deleteTaskHandler(task.id)}
+          doneTask={() => doneTaskHandler(task.id)}
+        ></TaskPanel>
+      </li>
     );
   });
 
   return (
     <div className={classes.sideMenu}>
       <div className={classes.header}>{t('Task')}</div>
-      {tasksElements}
+      <ul className={classes.menuList}>{tasksElements}</ul>
     </div>
   );
 };

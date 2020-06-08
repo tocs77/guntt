@@ -58,6 +58,12 @@
 }
 
 .taskRect:hover {
-  -webkit-filter: brightness(.55);
-  filter: brightness(.55);
+  -webkit-filter: brightness(0.55);
+  filter: brightness(0.55);
+}
+
+@media only screen and (max-width: 650px) {
+  .taskText {
+    font-size: 0.9rem;
+  }
 }

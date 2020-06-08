@@ -1,53 +1,41 @@
 .button {
-    height: 80%;
-    max-width: 20%;
-    min-width: min-content;
-    border-radius: 10%;
-    transition: all 0.2s;
-    background: linear-gradient(45deg, #e8a87c, #d86f26, #CE5B78);
-    color: aliceblue;
-    margin: 0.4rem;
-    padding: .2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    cursor: pointer;
-    float: left;
-
+  max-width: 20%;
+  min-width: min-content;
+  height: 90%;
+  border-radius: 10%;
+  transition: all 0.2s;
+  background: linear-gradient(45deg, #396afc, #2948ff);
+  margin: 0.4rem;
+  padding: 0.2rem;
+  cursor: pointer;
+  border: none;
+  color: aliceblue;
+  letter-spacing: 0.4rem;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: 600;
 }
-
 
 .button:hover {
-    transform: translateY(5px);
-    transform: scale(1.05);
+  transform: translateY(5px);
+  transform: scale(1.05);
 }
 
-.button_text {
-    letter-spacing: 0.4rem;
-    text-transform: uppercase;
-    font-size: 1.2rem;
-    text-align: center;
-    font-weight: 600;
-    overflow-wrap: break-word;
-    padding: 0.3rem
-}
 
 .button_small {
-    min-width: fit-content;
-    margin: 0.1rem;
-
+  min-width: fit-content;
+  margin: 0.1rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.1rem;
 }
 
-.button_text_small {
-    font-size: .7rem;
-    letter-spacing: 0.1rem;
-}
 
 @media only screen and (max-width: 900px) {
-    .button_text {
-        font-size: 1rem;
-    }
-    .button_text_small {
-        font-size: .4rem;
-    }
+  .button {
+    font-size: 1rem;
   }
+  .button_small {
+    font-size: 0.7rem;
+  }
+}
