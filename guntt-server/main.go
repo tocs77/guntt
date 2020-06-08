@@ -25,18 +25,53 @@ func main() {
 	db = driver.ConnectDB(logChannel)
 	router := mux.NewRouter()
 
-	router.HandleFunc("/gunttapi/tasks", logger.LogRequestHandler(controllers.GetTasks(db), logChannel)).Methods("GET")
-	router.HandleFunc("/gunttapi/tasks", logger.LogRequestHandler(controllers.SetOptions(db), logChannel)).Methods("OPTIONS")
-	router.HandleFunc("/gunttapi/tasks", logger.LogRequestHandler(controllers.DeleteTask(db), logChannel)).Methods("DELETE")
-	router.HandleFunc("/gunttapi/tasks", logger.LogRequestHandler(controllers.AddTask(db), logChannel)).Methods("POST")
-	router.HandleFunc("/gunttapi/tasks", logger.LogRequestHandler(controllers.UpdateTask(db), logChannel)).Methods("PUT")
+	router.HandleFunc("/gunttapi/tasks",
+		logger.LogRequestHandler(controllers.GetTasks(db),
+			logChannel)).Methods("GET")
 
-	router.HandleFunc("/gunttapi/auth", logger.LogRequestHandler(controllers.Authenticate(db), logChannel)).Methods("POST")
-	router.HandleFunc("/gunttapi/auth", logger.LogRequestHandler(controllers.CheckToken(db), logChannel)).Methods("GET")
-	router.HandleFunc("/gunttapi/auth", logger.LogRequestHandler(controllers.SetOptions(db), logChannel)).Methods("OPTIONS")
+	router.HandleFunc("/gunttapi/tasks",
+		logger.LogRequestHandler(controllers.SetOptions(db),
+			logChannel)).Methods("OPTIONS")
 
-	router.HandleFunc("/gunttapi/signup", logger.LogRequestHandler(controllers.Signup(db), logChannel)).Methods("POST")
-	router.HandleFunc("/gunttapi/signup", logger.LogRequestHandler(controllers.SetOptions(db), logChannel)).Methods("OPTIONS")
+	router.HandleFunc("/gunttapi/tasks",
+		logger.LogRequestHandler(controllers.DeleteTask(db),
+			logChannel)).Methods("DELETE")
+
+	router.HandleFunc("/gunttapi/tasks",
+		logger.LogRequestHandler(controllers.AddTask(db),
+			logChannel)).Methods("POST")
+
+	router.HandleFunc("/gunttapi/tasks",
+		logger.LogRequestHandler(controllers.UpdateTask(db),
+			logChannel)).Methods("PUT")
+
+	router.HandleFunc("/gunttapi/auth",
+		logger.LogRequestHandler(controllers.Authenticate(db),
+			logChannel)).Methods("POST")
+
+	router.HandleFunc("/gunttapi/auth",
+		logger.LogRequestHandler(controllers.CheckToken(db),
+			logChannel)).Methods("GET")
+
+	router.HandleFunc("/gunttapi/auth",
+		logger.LogRequestHandler(controllers.SetOptions(db),
+			logChannel)).Methods("OPTIONS")
+
+	router.HandleFunc("/gunttapi/signup",
+		logger.LogRequestHandler(controllers.Signup(db),
+			logChannel)).Methods("POST")
+
+	router.HandleFunc("/gunttapi/signup",
+		logger.LogRequestHandler(controllers.SetOptions(db),
+			logChannel)).Methods("OPTIONS")
+
+	router.HandleFunc("/gunttapi/demo",
+		logger.LogRequestHandler(controllers.SetOptions(db),
+			logChannel)).Methods("OPTIONS")
+
+	router.HandleFunc("/gunttapi/demo",
+		logger.LogRequestHandler(controllers.Demo(db),
+			logChannel)).Methods("GET")
 
 	logChannel <- "Guntt server started"
 

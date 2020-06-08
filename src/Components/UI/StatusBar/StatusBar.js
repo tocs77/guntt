@@ -9,12 +9,12 @@ const StatusBar = (props) => {
   const { t } = useTranslation();
 
   return (
-    <div className={classes.statusBar} id={props.id}>
+    <footer className={classes.statusBar} id={props.id}>
       <div className={classes.loginMessage}>
         {appState.isLogged ? t('Hello') + appState.userName : t('Please login or sign in')}
       </div>
       <div className={classes.author}>Developed by Ilya Golubkov</div>
-    </div>
+    </footer>
   );
 };
 

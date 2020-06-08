@@ -66,3 +66,8 @@ export const checkToken = async () => {
   let response = await axios.get('/auth', { headers: { Authorization: token } });
   return response.data;
 };
+
+export const demoMode = async () => {
+  let response = await axios.get('/demo');
+  return response.data;
+};

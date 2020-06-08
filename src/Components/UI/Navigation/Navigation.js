@@ -20,8 +20,9 @@ const Navigation = (props) => {
 
   useEffect(() => {
     async function f() {
-      const response = await apiFunctions.checkToken();               //*Check if saved token still valid and 
-      if (response.operationResponse.OperationStatus === 'Success') { //*authentication won`t need
+      const response = await apiFunctions.checkToken(); //*Check if saved token still valid and
+      if (response.operationResponse.OperationStatus === 'Success') {
+        //*authentication won`t need
         appDispatch({
           type: actiontypes.SET_USER_NAME,
           userName: response.auth.userName,
@@ -51,6 +52,9 @@ const Navigation = (props) => {
       type: actiontypes.APP_USER_EXIT,
     });
   };
+
+  const demoHandler = () => {};
+
   return (
     <nav className={classes.navigation} id={props.id}>
       <Logo />
@@ -63,6 +67,8 @@ const Navigation = (props) => {
         </Button>
       </div>
       <div className={classes.button_block}>
+        {appState.isLogged ? null : <Button clickHandler={demoHandler}>{t('Demo')}</Button>}
+
         {appState.isLogged ? (
           <Button clickHandler={addTaskHandler}>{t('AddTask')}</Button>
         ) : null}
