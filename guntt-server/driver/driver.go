@@ -8,7 +8,7 @@ import (
 
 var db *sql.DB
 
-var dbPath string = "./gunnt.db"
+var dbPath string = "/usr/db/gunnt.db"
 
 // ConnectDB connects to database
 func ConnectDB(logChannel chan string) *sql.DB {

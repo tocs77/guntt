@@ -1,0 +1,9 @@
+services:
+  guntt-server:
+    build:
+      dockerfile: Dockerfile.dev
+      context: "./guntt-server"
+    ports:
+      - 3030:3030
+    volumes:
+      - ./db:/usr
